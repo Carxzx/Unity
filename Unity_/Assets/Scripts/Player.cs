@@ -1,11 +1,17 @@
 using UnityEngine;
+using System;
 
 public class Player : MonoBehaviour
 {
-    const float speed = 4f;
+    const float speed = 5f;
 
     public static Transform tf;
     public Rigidbody2D Rb;
+
+    void Awake(){
+        tf = transform;
+        Rb = GetComponent<Rigidbody2D>();
+    }
 
     void Start(){
         
@@ -13,32 +19,78 @@ public class Player : MonoBehaviour
 
     
     void Update(){
-        float MovementX = Input.GetAxis("Horizontal");
-        float MovementY = Input.GetAxis("Vertical");
-        Rb.linearVelocity = new Vector2(speed * MovementX, Rb.linearVelocity.y);
+        float MovementX = Input.GetAxisRaw("Horizontal") * speed;
+        float MovementY = Input.GetAxisRaw("Vertical") * speed;
 
-        if(Input.GetKey(KeyCode.A)){
-            Rb.linearVelocity = new Vector2(-speed, Rb.linearVelocity.y);
+        MovementHandler(MovementX,MovementY);
+        
+    }
+
+
+
+    //Manejador de movimiento del jugador
+    void MovementHandler(float MovementX, float MovementY){
+
+        Rb.linearVelocity = new Vector2(MovementX,MovementY);
+        
+        //Parar cuando se pulsen las teclas de direcciones opuestas
+        if(PulsandoTeclasContrarias('X')){
+            Rb.linearVelocity = new Vector2(0f,Rb.linearVelocity.y);
+        }
+        if(PulsandoTeclasContrarias('Y')){
+            Rb.linearVelocity = new Vector2(Rb.linearVelocity.x,0f);
         }
 
-        if(Input.GetKey(KeyCode.D)){
-            Rb.linearVelocity = new Vector2(speed, Rb.linearVelocity.y);
+        //Movimiento en diagonal
+        if(Diagonal()){
+            Rb.linearVelocity = new Vector2(MovementX,MovementY) / Mathf.Sqrt(2);
         }
+        
+    }
 
-        if(Input.GetKey(KeyCode.W)){
-            Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, speed);
-        }
 
-        if(Input.GetKey(KeyCode.S)){
-            Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, -speed);
+    //Se le pasa un char, 'X' o 'Y' dependiendo del Axis a comprobar
+    //Devuelve true si se estan pulsando las teclas de direcciones contrarias del Axis especificado
+    bool PulsandoTeclasContrarias(char Axis){
+        if(Axis == 'X'){
+            if(Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D)){
+                return true;
+            }
         }
+        if(Axis == 'Y'){
+            if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.S)){
+                return true;
+            }
+        }
+        return false;
+    }
 
-        if(Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D)){
-            Rb.linearVelocity = new Vector2(0f, Rb.linearVelocity.y);
-        }
 
-        if(Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S)){
-            Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, 0f);
+    //Devuelve true si se está pulsando alguna tecla de dirección
+    bool PulsandoTecla(){
+        if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)){
+            return true;
         }
+        return false;
+    }
+
+
+    //Devuelve true si está caminando en una diagonal
+    bool Diagonal(){
+        if(!PulsandoTeclasContrarias('X') && !PulsandoTeclasContrarias('Y')){
+            if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A)){
+                return true;
+            }
+            if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D)){
+                return true;
+            }
+            if(Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A)){
+                return true;
+            }
+            if(Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D)){
+                return true;
+            }
+        }
+        return false;
     }
 }
