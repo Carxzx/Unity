@@ -8,13 +8,15 @@ public class Player : MonoBehaviour
     public static Transform tf;
     public Rigidbody2D Rb;
 
+    static public bool CanMove;
+
     void Awake(){
         tf = transform;
         Rb = GetComponent<Rigidbody2D>();
     }
 
     void Start(){
-        
+        CanMove = true;
     }
 
     
@@ -23,7 +25,6 @@ public class Player : MonoBehaviour
         float MovementY = Input.GetAxisRaw("Vertical") * speed;
 
         MovementHandler(MovementX,MovementY);
-        
     }
 
 
