@@ -5,8 +5,10 @@ public class Player : MonoBehaviour
 {
     const float speed = 5f;
 
-    public static Transform tf;
+    public Transform tf;
     public Rigidbody2D Rb;
+
+    public GameObject Camera;
 
     static public bool CanMove;
 
@@ -24,7 +26,9 @@ public class Player : MonoBehaviour
         float MovementX = Input.GetAxisRaw("Horizontal") * speed;
         float MovementY = Input.GetAxisRaw("Vertical") * speed;
 
-        MovementHandler(MovementX,MovementY);
+        if(CanMove){
+            MovementHandler(MovementX,MovementY);
+        }
     }
 
 

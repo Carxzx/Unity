@@ -3,7 +3,7 @@ using TMPro;
 
 public class TextBox : MonoBehaviour
 {
-    const float TiempoEntreCaracteres = 0.05f;
+    const float TiempoEntreCaracteres = 0.03f;
 
     public TMP_Text Dialogue;
     public GameObject triangle;
@@ -14,11 +14,10 @@ public class TextBox : MonoBehaviour
     
     void Start(){
         Dialogue.text = "";
-        gameObject.SetActive(false);
-        triangle.SetActive(false);
         cont = 0;
         tiempo = 0f;
         messageComplete = false;
+        triangle.SetActive(false);
     }
 
     
@@ -46,8 +45,8 @@ public class TextBox : MonoBehaviour
 
         //Si el mensaje se ha completado, y el usuario pulsa el click izquierdo, se quita el Cuadro de Texto
         if(messageComplete && Input.GetMouseButtonDown(0)){
-            gameObject.SetActive(false);
-            triangle.SetActive(false);
+            Player.CanMove = true;
+            ReiniciarObject();
         }
     }
 
@@ -62,5 +61,12 @@ public class TextBox : MonoBehaviour
             messageComplete = true;
             triangle.SetActive(true);
         }
+    }
+
+
+    //Devuelve el Cuadro de Texto a sus valores iniciales y lo desactiva
+    void ReiniciarObject(){
+        Start();
+        gameObject.SetActive(false);
     }
 }
