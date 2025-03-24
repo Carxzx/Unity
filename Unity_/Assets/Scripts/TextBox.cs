@@ -32,8 +32,7 @@ public class TextBox : MonoBehaviour
     //Manejador del Cuadro de Texto
     void TextBoxHandler(string message){
         //Hasta que el mensaje no esté completado, se imprimen caracteres
-        if(gameObject.activeSelf && !messageComplete){
-            Player.CanMove = false;
+        if(!messageComplete && gameObject.activeSelf){
             tiempo += Time.deltaTime;
             if(tiempo > TiempoEntreCaracteres){
                 PrintMessage(message);
@@ -45,8 +44,8 @@ public class TextBox : MonoBehaviour
 
         //Si el mensaje se ha completado, y el usuario pulsa el click izquierdo, se quita el Cuadro de Texto
         if(messageComplete && Input.GetMouseButtonDown(0)){
-            Player.CanMove = true;
             ReiniciarObject();
+            UI_Handler.OcultarUI(gameObject);
         }
     }
 
@@ -67,6 +66,5 @@ public class TextBox : MonoBehaviour
     //Devuelve el Cuadro de Texto a sus valores iniciales y lo desactiva
     void ReiniciarObject(){
         Start();
-        gameObject.SetActive(false);
     }
 }

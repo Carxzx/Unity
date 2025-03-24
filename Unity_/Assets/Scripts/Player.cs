@@ -4,13 +4,17 @@ using System;
 public class Player : MonoBehaviour
 {
     const float speed = 5f;
+    const float InteractuableDistance = 2f;
 
-    public Transform tf;
+    public static Transform tf;
     public Rigidbody2D Rb;
 
     public GameObject Camera;
 
     static public bool CanMove;
+
+    static public bool ChangeScenery;
+    static public Collision2D collisionAux;
 
     void Awake(){
         tf = transform;
@@ -19,6 +23,7 @@ public class Player : MonoBehaviour
 
     void Start(){
         CanMove = true;
+        ChangeScenery = false;
     }
 
     
@@ -28,6 +33,8 @@ public class Player : MonoBehaviour
 
         if(CanMove){
             MovementHandler(MovementX,MovementY);
+        }else{
+            Rb.linearVelocity = new Vector2(0,0);
         }
     }
 
@@ -97,5 +104,24 @@ public class Player : MonoBehaviour
             }
         }
         return false;
+    }
+
+
+    //Se le pasa un Vector3, el transform.position de un objeto.
+    //Devuelve true si el personaje está dentro del rango de distancia con el objeto que quiere interactuar
+    static public bool InRange(Vector3 Interactuable){
+        Vector2 distance = tf.position - Interactuable;
+
+        if(Mathf.Abs(distance.x) < InteractuableDistance && Mathf.Abs(distance.y) < InteractuableDistance){
+            return true;
+        }
+        return false;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision){
+        if(collision.collider.CompareTag("OutOfBounds")){
+            collisionAux = collision;
+            ChangeScenery = true;
+        }
     }
 }

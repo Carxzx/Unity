@@ -39,6 +39,11 @@ public class PlayerCamera : MonoBehaviour
         if(RaycastPared(R_up) || RaycastPared(R_down)){
             tf.position = new Vector3(tf.position.x,auxpos.y,tf.position.z);
         }
+
+        if(Door.TP){
+            Door.TP = false;
+            RestartCamera();
+        }
     }
 
 
@@ -86,6 +91,9 @@ public class PlayerCamera : MonoBehaviour
     }
 
 
+    void RestartCamera(){
+        Start();
+    }
 
     //Debug.DrawRay(OriginRaycastLeft, Vector2.right * RaycastDistanceX, Color.red); //Pintar Raycast
     //Debug.DrawRay(OriginRaycastUp, Vector2.down * RaycastDistanceY, Color.green); //Pintar Raycast
