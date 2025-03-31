@@ -9,6 +9,7 @@ public class UI_Handler : MonoBehaviour
     public GameObject Menu;
     public GameObject TransitionCircle;
     public GameObject Inventory;
+    public GameObject HotBar;
 
     Vector2 mousePosition;
     RaycastHit2D Raycast;
@@ -28,8 +29,12 @@ public class UI_Handler : MonoBehaviour
 
         if(ActiveUI){
             Desactivar_UI();
+
+            DesactivarHotBar();
         }else{
             Activar_UI();
+
+            ActivarHotBar();
         }
     }
 
@@ -51,7 +56,7 @@ public class UI_Handler : MonoBehaviour
     }
 
     void ClickableUI(){
-        if(Raycast.collider != null && Player.InRange(Raycast.collider.transform.position)){
+        if(Raycast.collider != null && Player.InRange(Raycast.collider.transform.position,Player.InteractuableDistance)){
             if(Raycast.collider.CompareTag("NPC")){
                 ActivarUI(TextBox);
             }else if(Raycast.collider.CompareTag("Door")){
@@ -104,6 +109,14 @@ public class UI_Handler : MonoBehaviour
         Door.PlayerTP(TransitionCircle, AuxRaycast.collider.GetComponent<Door>());
         yield return new WaitForSeconds(0.5f); // Espera los otros 0.5 segundos
         OcultarUI(TransitionCircle);
+    }
+
+    void DesactivarHotBar(){
+        HotBar.SetActive(false);
+    }
+
+    void ActivarHotBar(){
+        HotBar.SetActive(true);
     }
 }
 

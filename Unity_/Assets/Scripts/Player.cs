@@ -4,7 +4,8 @@ using System;
 public class Player : MonoBehaviour
 {
     const float speed = 5f;
-    const float InteractuableDistance = 2f;
+    public const float InteractuableDistance = 2f;
+    public const float AtractDistance = 3f;
 
     public static Transform tf;
     public Rigidbody2D Rb;
@@ -107,12 +108,12 @@ public class Player : MonoBehaviour
     }
 
 
-    //Se le pasa un Vector3, el transform.position de un objeto.
-    //Devuelve true si el personaje está dentro del rango de distancia con el objeto que quiere interactuar
-    static public bool InRange(Vector3 Interactuable){
+    //Se le pasa un Vector3, el transform.position de un objeto y un float, la distancia de interacción
+    //Devuelve true si el personaje está dentro del rango de distancia con el objeto
+    static public bool InRange(Vector3 Interactuable, float LimitDistance){
         Vector2 distance = tf.position - Interactuable;
 
-        if(Mathf.Abs(distance.x) < InteractuableDistance && Mathf.Abs(distance.y) < InteractuableDistance){
+        if(Mathf.Abs(distance.x) < LimitDistance && Mathf.Abs(distance.y) < LimitDistance){
             return true;
         }
         return false;
@@ -122,6 +123,44 @@ public class Player : MonoBehaviour
         if(collision.collider.CompareTag("OutOfBounds")){
             collisionAux = collision;
             ChangeScenery = true;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision){
+        if(collision.GetComponent<Collider2D>().CompareTag("Objeto")){
+            InventoryData InventoryData = FindFirstObjectByType<InventoryData>();
+            if(!InventoryData.InventoryFull()){
+                Objeto objeto = collision.GetComponent<Objeto>();
+                bool bandera = false;
+                int i = 0;
+
+                while(i < InventoryData.numSlots && !bandera){
+                    if(InventoryData.SameID(objeto.id,InventoryData.vSlots[i].objeto.id)){
+                        bandera = true;
+                    }
+                    i++;
+                }
+                i--;
+
+                if(bandera){
+                    InventoryData.vSlots[i].objeto.cantidad += objeto.cantidad;
+                }else{
+                    i = 0;
+                    while(InventoryData.vSlots[i].objeto.id != 0){
+                        i++;
+                    }
+                    Slot slot = InventoryData.vSlots[i];
+                    Objeto objInv = slot.objeto;
+
+                    objInv.id = objeto.id;
+                    objInv.cantidad = objeto.cantidad;
+                    objInv.OnGround = false;
+
+                    slot.ActualizarSprite(objInv);
+                }
+                Destroy(objeto.gameObject);
+                InventoryData.ObtenerSlots();
+            }
         }
     }
 }
