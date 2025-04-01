@@ -24,6 +24,7 @@ public class HotBar : MonoBehaviour
         }else{
             bandera = true;
         }
+        MoverHotBar();
     }
 
     public void ActualizarHotBar(){
@@ -68,6 +69,8 @@ public class HotBar : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Tab)){
             ManejarRow();
         }
+
+        MoverHotBar();
     }
 
     void ManejarRow(){
@@ -76,5 +79,13 @@ public class HotBar : MonoBehaviour
             RowActual = 0;
         }
         ActualizarHotBar();
+    }
+
+    void MoverHotBar(){
+        if(PlayerCamera.Chocando_abajo){
+            gameObject.transform.localPosition = new Vector2(gameObject.transform.localPosition.x, 190);
+        }else{
+            gameObject.transform.localPosition = new Vector2(gameObject.transform.localPosition.x, -190);
+        }
     }
 }

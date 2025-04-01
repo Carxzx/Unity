@@ -12,6 +12,8 @@ public class PlayerCamera : MonoBehaviour
     RaycastHit2D R_left, R_up, R_right, R_down;
 
     int layerMask;
+
+    public static bool Chocando_abajo;
     
     void Start(){
         //La camara comienza en la posicion del jugador
@@ -22,6 +24,8 @@ public class PlayerCamera : MonoBehaviour
         //Obtenemos los Raycasts y Inicializamos la cámara
         ObtenerRaycasts();
         InicializarCamara();
+
+        Chocando_abajo = false;
     }
 
     void Update(){
@@ -39,6 +43,8 @@ public class PlayerCamera : MonoBehaviour
         if(RaycastPared(R_up) || RaycastPared(R_down)){
             tf.position = new Vector3(tf.position.x,auxpos.y,tf.position.z);
         }
+
+        Chocando_abajo = RaycastPared(R_down);
 
         if(Door.TP){
             Door.TP = false;
