@@ -11,7 +11,7 @@ public class PlayerCamera : MonoBehaviour
     Vector2 OriginRaycast;
     RaycastHit2D R_left, R_up, R_right, R_down;
 
-    int layerMask;
+    int layer1, layer2, layerMask;
 
     public static bool Chocando_abajo;
     
@@ -19,7 +19,9 @@ public class PlayerCamera : MonoBehaviour
         //La camara comienza en la posicion del jugador
         tf.position = new Vector3(jugador.transform.position.x, jugador.transform.position.y, tf.position.z);
 
-        layerMask = LayerMask.GetMask("OutOfBounds");
+        layer1 = LayerMask.GetMask("OutOfBounds");
+        layer2 = LayerMask.GetMask("OutOfBoundsDoor");
+        layerMask = layer1 | layer2;
 
         //Obtenemos los Raycasts y Inicializamos la cámara
         ObtenerRaycasts();

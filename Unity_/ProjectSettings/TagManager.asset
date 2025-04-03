@@ -8,6 +8,7 @@ TagManager:
   - NPC
   - Door
   - Objeto
+  - OutOfBoundsDoor
   layers:
   - Default
   - TransparentFX

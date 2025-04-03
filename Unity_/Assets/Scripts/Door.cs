@@ -6,7 +6,7 @@ public class Door : MonoBehaviour
     public static bool TP;
 
     public static void PlayerTP(GameObject TransitionCircle, Door clickedDoor){
-        Player.tf.position = clickedDoor.ConectedDoor.transform.position;
+        Player.tf.position = clickedDoor.ConectedDoor.transform.GetChild(0).position;
         
         TP = true;
     }

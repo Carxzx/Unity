@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
     }
 
     void OnCollisionEnter2D(Collision2D collision){
-        if(collision.collider.CompareTag("OutOfBounds")){
+        if(collision.collider.CompareTag("OutOfBoundsDoor")){
             collisionAux = collision;
             ChangeScenery = true;
         }
