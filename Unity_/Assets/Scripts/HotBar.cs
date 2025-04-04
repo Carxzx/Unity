@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class HotBar : MonoBehaviour
 {
@@ -32,11 +33,13 @@ public class HotBar : MonoBehaviour
         for (int i = 0; i < SlotsPerRow; i++){
             Slot slot = GameObject.Find("S" + i).GetComponent<Slot>();
             slot.objeto = slot.transform.GetChild(0).GetComponent<Objeto>();
+            TMP_Text cantidad  = slot.transform.GetChild(1).GetComponent<TMP_Text>();
 
             Objeto objetoCopiar = InventoryData.vSlots[i+RowActual*SlotsPerRow].objeto;
 
             slot.objeto.id = objetoCopiar.id;
             slot.objeto.cantidad = objetoCopiar.cantidad;
+            cantidad.text = slot.objeto.cantidad == 0 ? "" : slot.objeto.cantidad.ToString();
 
             slot.ActualizarSprite(slot.objeto);
         }

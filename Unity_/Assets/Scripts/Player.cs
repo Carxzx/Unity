@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public const float InteractuableDistance = 2f;
     public const float AtractDistance = 3f;
 
+    public SpriteRenderer SR;
     public static Transform tf;
     public Rigidbody2D Rb;
 
@@ -16,6 +17,8 @@ public class Player : MonoBehaviour
 
     static public bool ChangeScenery;
     static public Collision2D collisionAux;
+
+    public Sprite[] vSprite; //0 = ARRIBA, 1 = DERECHA, 2 = ABAJO, 3 = IZQUIERDA
 
     void Awake(){
         tf = transform;
@@ -36,6 +39,23 @@ public class Player : MonoBehaviour
             MovementHandler(MovementX,MovementY);
         }else{
             Rb.linearVelocity = new Vector2(0,0);
+        }
+
+        ManageSprite();
+    }
+
+    void ManageSprite(){
+        if(Input.GetKey(KeyCode.W)){
+            SR.sprite = vSprite[0];
+        }
+        if(Input.GetKey(KeyCode.S)){
+            SR.sprite = vSprite[2];
+        }
+        if(Input.GetKey(KeyCode.A)){
+            SR.sprite = vSprite[3];
+        }
+        if(Input.GetKey(KeyCode.D)){
+            SR.sprite = vSprite[1];
         }
     }
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class Slot : MonoBehaviour
 {
@@ -47,6 +48,9 @@ public class Slot : MonoBehaviour
     }
 
     void Intercambiar(Objeto o1, Objeto o2){
+        TMP_Text cantidadMostrada1 = o1.gameObject.transform.parent.GetChild(1).GetComponent<TMP_Text>();
+        TMP_Text cantidadMostrada2 = o2.gameObject.transform.parent.GetChild(1).GetComponent<TMP_Text>();
+
         int tempID = o1.id;
         int tempCantidad = o1.cantidad;
         
@@ -56,19 +60,27 @@ public class Slot : MonoBehaviour
         o2.id = tempID;
         o2.cantidad = tempCantidad;
 
+        cantidadMostrada1.text = o1.cantidad == 0 ? "" : o1.cantidad.ToString();
+        cantidadMostrada2.text = o2.cantidad == 0 ? "" : o2.cantidad.ToString();
+
         ActualizarSprite(o1);
         ActualizarSprite(o2);
     }
 
     Objeto Sumar(Objeto o1, Objeto o2){
+        TMP_Text cantidadMostrada1 = o1.gameObject.transform.parent.GetChild(1).GetComponent<TMP_Text>();
+
         o1.cantidad += o2.cantidad;
+        cantidadMostrada1.text = o1.cantidad.ToString();
         Borrar(o2);
         return o1;
     }
 
     void Borrar(Objeto obj){
+        TMP_Text cantidadMostrada = obj.gameObject.transform.parent.GetChild(1).GetComponent<TMP_Text>();
         obj.id = 0;
         obj.cantidad = 0;
+        cantidadMostrada.text = "";
         obj.GetComponent<Image>().enabled = false;
     }
 

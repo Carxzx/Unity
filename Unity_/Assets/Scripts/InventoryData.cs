@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class InventoryData : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class InventoryData : MonoBehaviour
     public Slot[] vSlots = new Slot[numSlots];
 
     public static Objeto objetoEnMano;
+    public static TMP_Text cantidadObjetoEnMano;
     public static bool enMano;
 
     void Start(){
@@ -36,8 +38,13 @@ public class InventoryData : MonoBehaviour
         for (int i = 0; i < numSlots; i++){
             vSlots[i] = GameObject.Find("Slot" + i).GetComponent<Slot>();
             vSlots[i].objeto = vSlots[i].transform.GetChild(0).GetComponent<Objeto>();
+            TMP_Text cantidad  = vSlots[i].transform.GetChild(1).GetComponent<TMP_Text>();
+            cantidad.text = vSlots[i].objeto.cantidad == 0 ? "" : vSlots[i].objeto.cantidad.ToString();
         }
         objetoEnMano = GameObject.Find("objetoEnMano").transform.GetChild(0).GetComponent<Objeto>(); //Obtengo el objeto del Hijo del gameobject "objetoEnMano"
+        cantidadObjetoEnMano = GameObject.Find("objetoEnMano").transform.GetChild(1).GetComponent<TMP_Text>();
+        cantidadObjetoEnMano.text = objetoEnMano.cantidad == 0 ? "" : objetoEnMano.cantidad.ToString();
+
         Inventory.SetActive(false);
 
         HotBar HotBar = FindFirstObjectByType<HotBar>();
