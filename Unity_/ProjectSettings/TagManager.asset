@@ -9,6 +9,7 @@ TagManager:
   - Door
   - Objeto
   - OutOfBoundsDoor
+  - Hacha
   layers:
   - Default
   - TransparentFX

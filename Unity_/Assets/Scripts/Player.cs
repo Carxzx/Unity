@@ -7,21 +7,20 @@ public class Player : MonoBehaviour
     public const float InteractuableDistance = 2f;
     public const float AtractDistance = 3f;
 
-    public SpriteRenderer SR;
     public static Transform tf;
-    public Rigidbody2D Rb;
-
-    public GameObject Camera;
+    public static SpriteRenderer SR;
+    public static Rigidbody2D Rb;
 
     static public bool CanMove;
 
     static public bool ChangeScenery;
     static public Collision2D collisionAux;
 
-    public Sprite[] vSprite; //0 = ARRIBA, 1 = DERECHA, 2 = ABAJO, 3 = IZQUIERDA
+    public Sprite[] vSprite; //0 = ARRIBA, 1 = DERECHA, 2 = ABAJO
 
     void Awake(){
         tf = transform;
+        SR = GetComponent<SpriteRenderer>();
         Rb = GetComponent<Rigidbody2D>();
     }
 
@@ -52,10 +51,12 @@ public class Player : MonoBehaviour
             SR.sprite = vSprite[2];
         }
         if(Input.GetKey(KeyCode.A)){
-            SR.sprite = vSprite[3];
+            SR.sprite = vSprite[1];
+            SR.flipX = true;
         }
         if(Input.GetKey(KeyCode.D)){
             SR.sprite = vSprite[1];
+            SR.flipX = false;
         }
     }
 

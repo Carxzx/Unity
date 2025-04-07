@@ -4,7 +4,7 @@ using TMPro;
 public class HotBar : MonoBehaviour
 {
     const int SlotsPerRow = 10;
-    int RowActual;
+    public int RowActual;
     const int MaxRows = 4;
     GameObject CuadroSeleccion;
     public int seleccionado;
@@ -13,10 +13,13 @@ public class HotBar : MonoBehaviour
 
     bool bandera = false;
 
+    InventoryData InventoryData;
+
     void Start(){
         RowActual = 0;
         seleccionado = 0;
         CuadroSeleccion = GameObject.Find("Selected");
+        InventoryData = FindFirstObjectByType<InventoryData>();
     }
 
     void OnEnable(){
@@ -29,7 +32,6 @@ public class HotBar : MonoBehaviour
     }
 
     public void ActualizarHotBar(){
-        InventoryData InventoryData = FindFirstObjectByType<InventoryData>();
         for (int i = 0; i < SlotsPerRow; i++){
             Slot slot = GameObject.Find("S" + i).GetComponent<Slot>();
             slot.objeto = slot.transform.GetChild(0).GetComponent<Objeto>();
@@ -73,6 +75,11 @@ public class HotBar : MonoBehaviour
             ManejarRow();
         }
 
+        //Pulsar Click Izquierdo
+        if(Input.GetKeyDown(KeyCode.Mouse0) && Player.CanMove){
+            AccionObjeto();
+        }
+
         MoverHotBar();
     }
 
@@ -89,6 +96,16 @@ public class HotBar : MonoBehaviour
             gameObject.transform.localPosition = new Vector2(gameObject.transform.localPosition.x, 190);
         }else{
             gameObject.transform.localPosition = new Vector2(gameObject.transform.localPosition.x, -190);
+        }
+    }
+
+
+    void AccionObjeto(){
+        Objeto objeto = GameObject.Find("S" + seleccionado).transform.GetChild(0).GetComponent<Objeto>(); 
+        switch(objeto.id){
+            case 1: //Hacha
+                objeto.Hacha();
+            break;
         }
     }
 }

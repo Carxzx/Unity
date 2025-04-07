@@ -39,6 +39,11 @@ public class Objeto : MonoBehaviour
         Sprite.sprite = SpriteManager.vSprite[id];
         Sprite.enabled = id != 0;
     }
+
+    public void Hacha(){
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/Hacha");
+        Instantiate(prefab, Player.tf.position, Quaternion.identity);
+    }
 }
 
 /*

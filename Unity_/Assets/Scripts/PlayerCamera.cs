@@ -5,9 +5,6 @@ public class PlayerCamera : MonoBehaviour
     const float RaycastDistanceX = 12.45f;
     const float RaycastDistanceY = 7f;
 
-    public Transform tf;
-    public GameObject jugador;
-
     Vector2 OriginRaycast;
     RaycastHit2D R_left, R_up, R_right, R_down;
 
@@ -17,7 +14,7 @@ public class PlayerCamera : MonoBehaviour
     
     void Start(){
         //La camara comienza en la posicion del jugador
-        tf.position = new Vector3(jugador.transform.position.x, jugador.transform.position.y, tf.position.z);
+        transform.position = new Vector3(Player.tf.position.x, Player.tf.position.y, transform.position.z);
 
         layer1 = LayerMask.GetMask("OutOfBounds");
         layer2 = LayerMask.GetMask("OutOfBoundsDoor");
@@ -35,15 +32,15 @@ public class PlayerCamera : MonoBehaviour
         ObtenerRaycasts();
 
         //Actualizamos la posicion de la cámara con la del jugador
-        Vector2 auxpos = tf.position;
-        tf.position = new Vector3(jugador.transform.position.x, jugador.transform.position.y, tf.position.z);
+        Vector2 auxpos = transform.position;
+        transform.position = new Vector3(Player.tf.position.x, Player.tf.position.y, transform.position.z);
 
         //Si se choca con alguna pared, la cámara se queda en su sitio para no mostrar la pared
         if(RaycastPared(R_left) || RaycastPared(R_right)){
-            tf.position = new Vector3(auxpos.x,tf.position.y,tf.position.z);
+            transform.position = new Vector3(auxpos.x,transform.position.y,transform.position.z);
         }
         if(RaycastPared(R_up) || RaycastPared(R_down)){
-            tf.position = new Vector3(tf.position.x,auxpos.y,tf.position.z);
+            transform.position = new Vector3(transform.position.x,auxpos.y,transform.position.z);
         }
 
         Chocando_abajo = RaycastPared(R_down);
@@ -57,7 +54,7 @@ public class PlayerCamera : MonoBehaviour
 
     //Obtiene la posicion del jugador y crea los Raycast en cada dirección a partir de esa posición
     void ObtenerRaycasts(){
-        OriginRaycast = jugador.transform.position;
+        OriginRaycast = Player.tf.position;
 
         R_left = Physics2D.Raycast(OriginRaycast,Vector2.left,RaycastDistanceX,layerMask);
         R_up = Physics2D.Raycast(OriginRaycast,Vector2.up,RaycastDistanceY,layerMask);
@@ -82,11 +79,11 @@ public class PlayerCamera : MonoBehaviour
             while(RaycastPared(Raycast)){
                 OriginRaycast -= direccion * 0.01f;
                 Raycast = Physics2D.Raycast(OriginRaycast,direccion,RaycastDistance,layerMask); //empieza afuera
-                tf.position = new Vector3(OriginRaycast.x,OriginRaycast.y,tf.position.z);
+                transform.position = new Vector3(OriginRaycast.x,OriginRaycast.y,transform.position.z);
             }
             OriginRaycast += direccion * 0.01f;
             Raycast = Physics2D.Raycast(OriginRaycast,direccion,RaycastDistance,layerMask);
-            tf.position = new Vector3(OriginRaycast.x,OriginRaycast.y,tf.position.z);
+            transform.position = new Vector3(OriginRaycast.x,OriginRaycast.y,transform.position.z);
         }
         return Raycast;
     }
