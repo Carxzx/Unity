@@ -10,6 +10,7 @@ TagManager:
   - Objeto
   - OutOfBoundsDoor
   - Hacha
+  - ArbolTrigger
   layers:
   - Default
   - TransparentFX

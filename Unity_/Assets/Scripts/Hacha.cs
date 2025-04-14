@@ -5,9 +5,10 @@ public class Hacha : MonoBehaviour
 {
     const int rotacion = 90;
     const float tiempoRotacion = 0.3f;
+    Vector2 posInic = new Vector2(Player.tf.position.x, Player.tf.position.y+0.8f);
 
     void Start(){
-        transform.position = new Vector2(Player.tf.position.x, Player.tf.position.y+0.8f); 
+        transform.position = posInic;
         StartCoroutine(RotarGradual(rotacion,tiempoRotacion));
     }
 
@@ -24,7 +25,7 @@ public class Hacha : MonoBehaviour
         float velocidadRotacion = grados / tiempoDeRotacion;
         float tiempoTranscurrido = 0f;
 
-        while (tiempoTranscurrido < tiempoDeRotacion){
+        while(tiempoTranscurrido < tiempoDeRotacion){
             // Rotar gradualmente hacia el objetivo
             gameObject.transform.rotation = Quaternion.RotateTowards(gameObject.transform.rotation, objetivo, velocidadRotacion * Time.deltaTime);
             tiempoTranscurrido += Time.deltaTime;
@@ -36,5 +37,16 @@ public class Hacha : MonoBehaviour
         Destroy(gameObject);
         
         Player.CanMove = true;
+    }
+
+    void OnTriggerEnter2D(Collider2D collision){
+        if(collision.CompareTag("ArbolTrigger")){
+            ArbolScript arbol = collision.transform.parent.GetComponent<ArbolScript>();
+
+            arbol.vidaArbol--;
+            if(arbol.vidaArbol <= 0){
+                arbol.DestruirArbol();
+            }
+        }
     }
 }

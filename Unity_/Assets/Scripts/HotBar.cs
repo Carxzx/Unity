@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class HotBar : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class HotBar : MonoBehaviour
     public int seleccionado;
     const int posBase = -180;
     const int tamCuadro = 40;
+    int layerMask;
 
     bool bandera = false;
 
@@ -20,6 +23,7 @@ public class HotBar : MonoBehaviour
         seleccionado = 0;
         CuadroSeleccion = GameObject.Find("Selected");
         InventoryData = FindFirstObjectByType<InventoryData>();
+        layerMask = LayerMask.GetMask("UI");
     }
 
     void OnEnable(){
@@ -67,20 +71,32 @@ public class HotBar : MonoBehaviour
     }
 
     void Update(){
+        //Rodar Rueda del raton
         if(Input.mouseScrollDelta.y != 0){
             float input = Input.mouseScrollDelta.y;
             MouseScrollWheel(input);
         }
+
+        //Pulsar Tabulador
         if(Input.GetKeyDown(KeyCode.Tab)){
             ManejarRow();
         }
 
         //Pulsar Click Izquierdo
         if(Input.GetKeyDown(KeyCode.Mouse0) && Player.CanMove){
-            AccionObjeto();
+            if(!EventSystem.current.IsPointerOverGameObject()){
+                AccionObjeto();
+            }
         }
 
+        //Pulsar un numero
+        PulsarNum();
+
         MoverHotBar();
+
+        if(Input.GetKeyDown(KeyCode.H)){
+            SceneManager.LoadScene("CarroScene");
+        }
     }
 
     void ManejarRow(){
@@ -106,6 +122,18 @@ public class HotBar : MonoBehaviour
             case 1: //Hacha
                 objeto.Hacha();
             break;
+        }
+    }
+
+    void PulsarNum(){
+        for (int i = 0; i <= 9; i++){
+            KeyCode alphaKey = KeyCode.Alpha0 + i;
+            KeyCode keypadKey = KeyCode.Keypad0 + i;
+
+            if (Input.GetKeyDown(alphaKey) || Input.GetKeyDown(keypadKey)){
+                seleccionado = i;
+                MoverCuadroSeleccion();
+            }
         }
     }
 }
