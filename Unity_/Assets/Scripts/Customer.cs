@@ -6,6 +6,7 @@ public class Customer : MonoBehaviour
     Vector3 destino1;
     Vector3 destino2;
     const float distancePerFrame = 0.03f;
+    //const float distancePerFrame = 0.01f; //de prueba
 
     bool Canvas;
     bool finish;
@@ -16,12 +17,13 @@ public class Customer : MonoBehaviour
 
         destino1 = new Vector3(0,0,0);
         destino2 = new Vector3(15f,0,0);
+        //destino2 = new Vector3(0,-15f,0); //de prueba
 
         Canvas = false;
         finish = false;
     }
 
-    void Update(){
+    protected virtual void Update(){
         if(transform.position != destino1 && !finish){
             Acercarse();
             Canvas = true; ////
@@ -33,6 +35,7 @@ public class Customer : MonoBehaviour
             Alejarse();
             Destroy(gameObject,2f);
         }
+        Debug.Log("hola");
     }
 
     void Acercarse(){

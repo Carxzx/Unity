@@ -5,10 +5,9 @@ public class Hacha : MonoBehaviour
 {
     const int rotacion = 90;
     const float tiempoRotacion = 0.3f;
-    Vector2 posInic = new Vector2(Player.tf.position.x, Player.tf.position.y+0.8f);
 
     void Start(){
-        transform.position = posInic;
+        transform.position = new Vector2(Player.tf.position.x, Player.tf.position.y+0.8f);
         StartCoroutine(RotarGradual(rotacion,tiempoRotacion));
     }
 

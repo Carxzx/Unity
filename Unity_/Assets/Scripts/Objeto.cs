@@ -49,8 +49,8 @@ public class Objeto : MonoBehaviour
 /*
 
 ID:
-    1 = Triangulo
-    2 = Rombo
+    1 = Hacha
+    2 = Madera
 
 
 
