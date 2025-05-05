@@ -10,7 +10,8 @@ TagManager:
   - Objeto
   - OutOfBoundsDoor
   - Hacha
-  - ArbolTrigger
+  - Pico
+  - PlayerTrigger
   layers:
   - Default
   - TransparentFX
@@ -20,8 +21,8 @@ TagManager:
   - UI
   - OutOfBounds
   - Interactuable
-  - 
-  - 
+  - ArbolTrigger
+  - PiedraTrigger
   - 
   - 
   - 

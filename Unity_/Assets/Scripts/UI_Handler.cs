@@ -15,26 +15,31 @@ public class UI_Handler : MonoBehaviour
     RaycastHit2D Raycast;
     int layerMask;
 
+    bool EventTrigger;
+
     void Start(){
         layerMask = LayerMask.GetMask("Interactuable");
         ActiveUI = false;
+        EventTrigger = false;
     }
     
     void Update(){
-        //Obtenemos la posición del ratón en la pantalla
-        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if(!EventTrigger){
+            //Obtenemos la posición del ratón en la pantalla
+            mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        //Lanzamos un Raycast para comprobar lo que tiene justo debajo
-        Raycast = Physics2D.Raycast(mousePosition,Vector2.zero,0f,layerMask);
+            //Lanzamos un Raycast para comprobar lo que tiene justo debajo
+            Raycast = Physics2D.Raycast(mousePosition,Vector2.zero,0f,layerMask);
 
-        if(ActiveUI){
-            Desactivar_UI();
+            if(ActiveUI){
+                Desactivar_UI();
 
-            DesactivarHotBar();
-        }else{
-            Activar_UI();
+                DesactivarHotBar();
+            }else{
+                Activar_UI();
 
-            ActivarHotBar();
+                ActivarHotBar();
+            }
         }
     }
 
@@ -117,6 +122,25 @@ public class UI_Handler : MonoBehaviour
 
     void ActivarHotBar(){
         HotBar.SetActive(true);
+    }
+
+    public void EventOn(){
+        EventTrigger = true;
+
+        TextBox.SetActive(false);
+        Menu.SetActive(false);
+        TransitionCircle.SetActive(false);
+        Inventory.SetActive(false);
+        HotBar.SetActive(false);
+
+        Player.CanMove = false;
+    }
+
+    public void EventOff(){
+        EventTrigger = false;
+
+        HotBar.SetActive(true);
+        Player.CanMove = true;
     }
 }
 

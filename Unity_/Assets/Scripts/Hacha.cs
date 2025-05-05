@@ -3,13 +3,34 @@ using System.Collections;
 
 public class Hacha : MonoBehaviour
 {
+    float rotacionInicial = 30f;
     const int rotacion = 90;
     const float tiempoRotacion = 0.3f;
 
+    const float RaycastDistance = 1f;
+    int layerMask;
+
+    Player Player;
+
     void Start(){
+        Player = FindFirstObjectByType<Player>();
+        layerMask = LayerMask.GetMask("ArbolTrigger");
+
         transform.position = new Vector2(Player.tf.position.x, Player.tf.position.y+0.8f);
+        if(!Player.SR.flipX){
+            rotacionInicial*=-1;
+        }
+
+        Vector3 escala = transform.localScale;
+        escala.x = Player.SR.flipX ? 1f : -1f;
+        transform.localScale = escala;
+
+
+        transform.rotation = Quaternion.Euler(0f, 0f, rotacionInicial);
+
         StartCoroutine(RotarGradual(rotacion,tiempoRotacion));
     }
+
 
     private IEnumerator RotarGradual(float grados, float tiempoDeRotacion){
         Player.CanMove = false;
@@ -33,19 +54,44 @@ public class Hacha : MonoBehaviour
 
         gameObject.transform.rotation = objetivo;
 
-        Destroy(gameObject);
+        ComprobarGolpe(); //Comprobar si se ha golpeado un arbol
+
+        Destroy(gameObject); //Eliminar el hacha de la escena
         
         Player.CanMove = true;
     }
 
-    void OnTriggerEnter2D(Collider2D collision){
-        if(collision.CompareTag("ArbolTrigger")){
-            ArbolScript arbol = collision.transform.parent.GetComponent<ArbolScript>();
+    void ComprobarGolpe(){
+        ///Obtener la direccion a la que mira el personaje
+        Vector2 direccion = Player.ObtenerDireccion();
+        Vector2 posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+1f);
 
-            arbol.vidaArbol--;
-            if(arbol.vidaArbol <= 0){
-                arbol.DestruirArbol();
+        //Castear un rayo desde el jugador a la direccion que mira
+        RaycastHit2D Raycast = Physics2D.Raycast(posicion,direccion,RaycastDistance,layerMask);
+
+        if(Raycast.collider != null){
+            GolpearArbol(Raycast.collider);
+        }else{
+            posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+0.75f);
+            Raycast = Physics2D.Raycast(posicion,direccion,RaycastDistance,layerMask);
+            if(Raycast.collider != null){
+                GolpearArbol(Raycast.collider);
+            }else{
+                posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+1.25f);
+                Raycast = Physics2D.Raycast(posicion,direccion,RaycastDistance,layerMask);
+                if(Raycast.collider != null){
+                    GolpearArbol(Raycast.collider);
+                }
             }
+        }
+    }
+
+    void GolpearArbol(Collider2D collision){
+        ArbolScript arbol = collision.transform.parent.GetComponent<ArbolScript>();
+
+        arbol.vidaArbol--;
+        if(arbol.vidaArbol <= 0){
+            arbol.DestruirArbol();
         }
     }
 }

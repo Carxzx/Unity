@@ -37,17 +37,10 @@ public class HotBar : MonoBehaviour
 
     public void ActualizarHotBar(){
         for (int i = 0; i < SlotsPerRow; i++){
-            Slot slot = GameObject.Find("S" + i).GetComponent<Slot>();
-            slot.objeto = slot.transform.GetChild(0).GetComponent<Objeto>();
-            TMP_Text cantidad  = slot.transform.GetChild(1).GetComponent<TMP_Text>();
-
+            Objeto objeto = GameObject.Find("S" + i).transform.GetChild(0).GetComponent<Objeto>();
             Objeto objetoCopiar = InventoryData.vSlots[i+RowActual*SlotsPerRow].objeto;
 
-            slot.objeto.id = objetoCopiar.id;
-            slot.objeto.cantidad = objetoCopiar.cantidad;
-            cantidad.text = slot.objeto.cantidad == 0 ? "" : slot.objeto.cantidad.ToString();
-
-            slot.ActualizarSprite(slot.objeto);
+            InventoryData.CopiarObjeto(objeto,objetoCopiar);
         }
     }
 
@@ -117,11 +110,17 @@ public class HotBar : MonoBehaviour
 
 
     void AccionObjeto(){
-        Objeto objeto = GameObject.Find("S" + seleccionado).transform.GetChild(0).GetComponent<Objeto>(); 
+        Objeto objeto = GameObject.Find("S" + seleccionado).transform.GetChild(0).GetComponent<Objeto>();
+        GameObject prefab;
         switch(objeto.id){
-            case 1: //Hacha
-                objeto.Hacha();
-            break;
+            case 2: //Hacha
+                prefab = Resources.Load<GameObject>("Prefabs/Herramientas/Hacha");
+                Instantiate(prefab);
+                break;
+            case 3: //Pico
+                prefab = Resources.Load<GameObject>("Prefabs/Herramientas/Pico");
+                Instantiate(prefab);
+                break;
         }
     }
 

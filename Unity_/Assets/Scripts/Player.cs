@@ -36,11 +36,10 @@ public class Player : MonoBehaviour
 
         if(CanMove){
             MovementHandler(MovementX,MovementY);
+            ManageSprite();
         }else{
-            Rb.linearVelocity = new Vector2(0,0);
+            Rb.linearVelocity = Vector2.zero;
         }
-
-        ManageSprite();
     }
 
     void ManageSprite(){
@@ -57,6 +56,20 @@ public class Player : MonoBehaviour
         if(Input.GetKey(KeyCode.D)){
             SR.sprite = vSprite[1];
             SR.flipX = false;
+        }
+    }
+
+    public Vector2 ObtenerDireccion(){
+        if(SR.sprite == vSprite[0]){
+            return Vector2.up;
+        }else if(SR.sprite == vSprite[2]){
+            return Vector2.down;
+        }else{
+            if(SR.flipX){
+                return Vector2.left;
+            }else{
+                return Vector2.right;
+            }
         }
     }
 
@@ -152,11 +165,13 @@ public class Player : MonoBehaviour
             InventoryData InventoryData = FindFirstObjectByType<InventoryData>();
             if(!InventoryData.InventoryFull()){
                 Objeto objeto = collision.GetComponent<Objeto>();
+                if(!objeto.OnGround) return; //Bandera para que no entre 2 veces
+                objeto.OnGround = false;
                 bool bandera = false;
                 int i = 0;
 
                 while(i < InventoryData.numSlots && !bandera){
-                    if(InventoryData.SameID(objeto.id,InventoryData.vSlots[i].objeto.id)){
+                    if(InventoryData.SameItem(objeto,InventoryData.vSlots[i].objeto)){
                         bandera = true;
                     }
                     i++;
@@ -170,14 +185,8 @@ public class Player : MonoBehaviour
                     while(InventoryData.vSlots[i].objeto.id != 0){
                         i++;
                     }
-                    Slot slot = InventoryData.vSlots[i];
-                    Objeto objInv = slot.objeto;
-
-                    objInv.id = objeto.id;
-                    objInv.cantidad = objeto.cantidad;
-                    objInv.OnGround = false;
-
-                    slot.ActualizarSprite(objInv);
+                    Objeto objInventario = InventoryData.vSlots[i].objeto;
+                    InventoryData.CopiarObjeto(objInventario,objeto);
                 }
                 Destroy(objeto.gameObject);
                 InventoryData.ObtenerSlots();
