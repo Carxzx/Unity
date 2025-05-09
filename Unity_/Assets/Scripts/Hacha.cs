@@ -21,6 +21,7 @@ public class Hacha : MonoBehaviour
             rotacionInicial*=-1;
         }
 
+        //Girar el sprite sin depender del pivot
         Vector3 escala = transform.localScale;
         escala.x = Player.SR.flipX ? 1f : -1f;
         transform.localScale = escala;

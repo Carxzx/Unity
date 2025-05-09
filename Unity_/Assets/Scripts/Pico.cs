@@ -3,11 +3,19 @@ using System.Collections;
 
 public class Pico : MonoBehaviour
 {
-float rotacionInicial = 30f;
+    float rotacionInicial = 30f;
     const int rotacion = 90;
     const float tiempoRotacion = 0.3f;
 
+    const float RaycastDistance = 1f;
+    int layerMask;
+
+    Player Player;
+
     void Start(){
+        Player = FindFirstObjectByType<Player>();
+        layerMask = LayerMask.GetMask("PiedraTrigger");
+
         transform.position = new Vector2(Player.tf.position.x, Player.tf.position.y+0.8f);
         if(!Player.SR.flipX){
             rotacionInicial*=-1;
@@ -46,20 +54,45 @@ float rotacionInicial = 30f;
 
         gameObject.transform.rotation = objetivo;
 
-        Destroy(gameObject);
+        ComprobarGolpe(); //Comprobar si ha chocado contra una piedra
+
+        Destroy(gameObject); //Eliminar el pico de la escena
         
         Player.CanMove = true;
     }
 
-    
-    void OnTriggerEnter2D(Collider2D collision){
-        if(collision.CompareTag("PiedraTrigger")){
-            PiedraScript piedra = collision.transform.parent.GetComponent<PiedraScript>();
+    void ComprobarGolpe(){
+        ///Obtener la direccion a la que mira el personaje
+        Vector2 direccion = Player.ObtenerDireccion();
+        Vector2 posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+1f);
 
-            piedra.vidaPiedra--;
-            if(piedra.vidaPiedra <= 0){
-                piedra.DestruirPiedra();
+        //Castear un rayo desde el jugador a la direccion que mira
+        RaycastHit2D Raycast = Physics2D.Raycast(posicion,direccion,RaycastDistance,layerMask);
+
+        if(Raycast.collider != null){
+            GolpearPiedra(Raycast.collider);
+        }else{
+            posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+0.75f);
+            Raycast = Physics2D.Raycast(posicion,direccion,RaycastDistance,layerMask);
+            if(Raycast.collider != null){
+                GolpearPiedra(Raycast.collider);
+            }else{
+                posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+1.25f);
+                Raycast = Physics2D.Raycast(posicion,direccion,RaycastDistance,layerMask);
+                if(Raycast.collider != null){
+                    GolpearPiedra(Raycast.collider);
+                }
             }
+        }
+    }
+
+    
+    void GolpearPiedra(Collider2D collision){
+        PiedraScript piedra = collision.transform.parent.GetComponent<PiedraScript>();
+
+        piedra.vidaPiedra--;
+        if(piedra.vidaPiedra <= 0){
+            piedra.DestruirPiedra();
         }
     }
     
