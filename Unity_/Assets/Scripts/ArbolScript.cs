@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class ArbolScript : MonoBehaviour
 {
+    public Tilemap tilemap;
     public int vidaArbol;
 
     void Start(){
+        tilemap = GameObject.Find("TilemapArboles").GetComponent<Tilemap>();
         vidaArbol = 5;
     }
 
@@ -15,6 +18,10 @@ public class ArbolScript : MonoBehaviour
 
         instancia.GetComponent<Objeto>().cantidad = Random.Range(1, 4);
 
-        Destroy(gameObject);
+
+        Vector3Int tilePos = tilemap.WorldToCell(transform.position);
+        tilemap.SetTile(tilePos, null);
+
+        //Destroy(gameObject);
     }
 }
