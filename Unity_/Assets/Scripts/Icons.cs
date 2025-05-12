@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Icons : MonoBehaviour
 {
@@ -8,10 +9,13 @@ public class Icons : MonoBehaviour
     int layerMask;
     RaycastHit2D Raycast;
 
+    UI_Handler UI_Handler;
+
 
     void Start(){
         gameObject.SetActive(true);
         layerMask = LayerMask.GetMask("Interactuable");
+        UI_Handler = FindFirstObjectByType<UI_Handler>();
     }
 
     void Update(){
@@ -27,8 +31,12 @@ public class Icons : MonoBehaviour
         //Lanzamos un Raycast para comprobar lo que tiene justo debajo
         Raycast = Physics2D.Raycast(mousePosition,Vector2.zero,0f,layerMask);
         
-        ManejarBalloon();
-        ShowTile();
+        if(!UI_Handler.EventTrigger){
+            ManejarBalloon();
+        }
+        if(!UI_Handler.ActiveUI){
+
+        }
     }
 
 
@@ -42,8 +50,20 @@ public class Icons : MonoBehaviour
         Balloon.SetActive(active);
 
         if(active){
+            //if(minotauro){
+            // posicion = ...
+            //}else if(minero){
+            // posicion = ...
+            //}
             Balloon.transform.position = new Vector2(Raycast.collider.transform.position.x + offsetX, Raycast.collider.transform.position.y + offsetY);
         }
+    }
+
+    static public IEnumerator MostrarIcono(GameObject objeto, string icono, float segundos){
+        GameObject hijo = objeto.transform.Find(icono).gameObject;
+        hijo.SetActive(true);
+        yield return new WaitForSeconds(segundos);
+        hijo.SetActive(false);
     }
 
 

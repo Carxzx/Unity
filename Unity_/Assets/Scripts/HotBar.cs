@@ -10,8 +10,8 @@ public class HotBar : MonoBehaviour
     const int MaxRows = 4;
     GameObject CuadroSeleccion;
     public int seleccionado;
-    const int posBase = -180;
-    const int tamCuadro = 40;
+    const int posBase = -189;
+    const int tamCuadro = 42;
     int layerMask;
 
     bool bandera = false;

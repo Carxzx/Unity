@@ -7,9 +7,9 @@ public class NPC_Minotauro : MonoBehaviour
     public int fotograma;
 
     public Sprite[] lado;
-    public Sprite[] arriba;
-    public Sprite[] abajo;
-    bool walking;
+    public Sprite[] espalda;
+    public Sprite[] frente;
+    public bool walking;
     Vector2 direccion;
 
     Vector3 inicio;
@@ -28,18 +28,21 @@ public class NPC_Minotauro : MonoBehaviour
             gameObject.transform.position = Vector2.MoveTowards(inicio, fin, distancePerFrame);
 
             walking = transform.position != fin ? true : false;
-
+            
             anim.SetBool("Walk",walking);
             AsignarSprite(direccion,fotograma);
+        }else{
+            anim.SetBool("Walk",false);
+            AsignarSprite(direccion,0);
         }
     }
 
     Vector2 ComprobarDireccion(){
         Vector3 diferencia = fin - inicio;
 
-        if(diferencia.y < 0){ //Movimiento hacia arriba
+        if(diferencia.y > 0){ //Movimiento hacia arriba
             return Vector2.up;
-        }else if(diferencia.y > 0){ //Movimiento hacia debajo
+        }else if(diferencia.y < 0){ //Movimiento hacia debajo
             return Vector2.down;
         }else if(diferencia.x > 0){ //Movimiento hacia la derecha
             return Vector2.right;
@@ -52,9 +55,9 @@ public class NPC_Minotauro : MonoBehaviour
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
 
         if (dir == Vector2.up) {
-            sr.sprite = arriba[fot];
+            sr.sprite = espalda[fot];
         } else if (dir == Vector2.down) {
-            sr.sprite = abajo[fot];
+            sr.sprite = frente[fot];
         } else if (dir == Vector2.right || dir == Vector2.left) {
             sr.flipX = (dir == Vector2.right) ? false : true;
             sr.sprite = lado[fot];
@@ -69,7 +72,8 @@ public class NPC_Minotauro : MonoBehaviour
         direccion = ComprobarDireccion();
     }
 
-    public void Girarse(Vector2 direccion){
+    public void Girarse(Vector2 dir){
+        direccion = dir;
         AsignarSprite(direccion,0);
     }
 }

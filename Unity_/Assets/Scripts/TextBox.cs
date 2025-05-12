@@ -72,6 +72,10 @@ public class TextBox : MonoBehaviour
     }
 
 
+    public void MoverTextBox(){
+        gameObject.transform.localPosition = new Vector2(gameObject.transform.localPosition.x, gameObject.transform.localPosition.y*-1);
+    }
+
     //Devuelve el Cuadro de Texto a sus valores iniciales y lo desactiva
     void ReiniciarObject(){
         Start();

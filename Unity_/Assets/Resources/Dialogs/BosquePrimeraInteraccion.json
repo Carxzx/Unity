@@ -1,0 +1,72 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "Minotauro",
+      "lineas": [
+        "¡¿Eh?!",
+        "¿Un humano?",
+        "¡¿Qué haces tú aquí, en este bosque?!"
+      ]
+    },
+    {
+      "id": 1,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Pensé que este bosque ya no era visitado por los tuyos..."
+      ]
+    },
+    {
+      "id": 2,
+      "personaje": "Minotauro",
+      "lineas": [
+        "No pareces un cazador. ¿Estás perdido?"
+      ]
+    },
+    {
+      "id": 3,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Perderse en un bosque encantado no es algo que deba tomarse a la ligera..."
+      ]
+    },
+    {
+      "id": 4,
+      "personaje": "Jugador",
+      "lineas": [
+        "¿Dónde estoy exactamente?"
+      ]
+    },
+    {
+      "id": 5,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Este bosque marca el límite de la villa de “Nombre de villa” . Mi aldea está al oeste de aquí.",
+        "Por cierto, ¿cómo te llamas?"
+      ]
+    },
+    {
+      "id": 6,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Bien, {nombre}. Si no recuerdas cómo llegaste, lo mejor será que vengas conmigo.",
+        "El bosque no es seguro cuando cae la noche."
+      ]
+    },
+    {
+      "id": 7,
+      "personaje": "Minotauro",
+      "lineas": [
+        "<< No debería traerle… >>",
+        "<< Bueno, no creo que pase nada. >>"
+      ]
+    },
+    {
+      "id": 8,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Ven. Te llevaré al pueblo. Solo quédate cerca."
+      ]
+    }
+  ]
+}

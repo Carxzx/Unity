@@ -15,7 +15,7 @@ public class UI_Handler : MonoBehaviour
     RaycastHit2D Raycast;
     int layerMask;
 
-    bool EventTrigger;
+    public bool EventTrigger;
 
     void Start(){
         layerMask = LayerMask.GetMask("Interactuable");
