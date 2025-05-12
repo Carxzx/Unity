@@ -10,7 +10,7 @@ public class NPC_Minotauro : MonoBehaviour
     public Sprite[] arriba;
     public Sprite[] abajo;
     bool walking;
-    int direccion;
+    Vector2 direccion;
 
     Vector3 inicio;
     Vector3 fin;
@@ -34,33 +34,30 @@ public class NPC_Minotauro : MonoBehaviour
         }
     }
 
-    int ComprobarDireccion(){
+    Vector2 ComprobarDireccion(){
         Vector3 diferencia = fin - inicio;
 
         if(diferencia.y < 0){ //Movimiento hacia arriba
-            return 1;
+            return Vector2.up;
         }else if(diferencia.y > 0){ //Movimiento hacia debajo
-            return 2;
+            return Vector2.down;
         }else if(diferencia.x > 0){ //Movimiento hacia la derecha
-            return 3;
+            return Vector2.right;
         }else{ //Movimiento hacia la izquierda
-            return 4;
+            return Vector2.left;
         }
     }
 
-    void AsignarSprite(int dir, int fot){
-        switch(dir){
-            case 1:
-                GetComponent<SpriteRenderer>().sprite = arriba[fot];
-                break;
-            case 2:
-                GetComponent<SpriteRenderer>().sprite = abajo[fot];
-                break;
-            case 3:
-            case 4:
-                GetComponent<SpriteRenderer>().flipX = direccion == 3 ? false : true;
-                GetComponent<SpriteRenderer>().sprite = lado[fot];
-                break;
+    void AsignarSprite(Vector2 dir, int fot){
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+
+        if (dir == Vector2.up) {
+            sr.sprite = arriba[fot];
+        } else if (dir == Vector2.down) {
+            sr.sprite = abajo[fot];
+        } else if (dir == Vector2.right || dir == Vector2.left) {
+            sr.flipX = (dir == Vector2.right) ? false : true;
+            sr.sprite = lado[fot];
         }
     }
 
@@ -70,5 +67,9 @@ public class NPC_Minotauro : MonoBehaviour
         fin = f;
         distancePerFrame = d;
         direccion = ComprobarDireccion();
+    }
+
+    public void Girarse(Vector2 direccion){
+        AsignarSprite(direccion,0);
     }
 }

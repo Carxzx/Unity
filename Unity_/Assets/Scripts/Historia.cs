@@ -43,12 +43,11 @@ public class Historia : MonoBehaviour
         UI_Handler.OcultarUI(UI_Handler.TextBox);
     }
 
-    public void EncuentroMinotauro(){
-        UI_Handler.EventOn();
-        StartCoroutine(_EncuentroMinotauro());
+    public void _Prueba(){
+        StartCoroutine(Prueba());
     }
 
-    private IEnumerator _EncuentroMinotauro(){
+    private IEnumerator Prueba(){
         GameObject prefab = Resources.Load<GameObject>("Prefabs/Personajes/Minotauro_NPC");
         Vector2 pos = new Vector3(Player.tf.position.x, Player.tf.position.y-15,0);
         GameObject instancia = Instantiate(prefab,pos,Quaternion.identity);
@@ -63,14 +62,32 @@ public class Historia : MonoBehaviour
         //Esperar 3,5segundos
         yield return new WaitForSeconds(4f); //Esperar hasta que termine de moverse
 
-        Dialogo dialogo = CargarDialogo("EncuentroMinotauro");
+        Dialogo dialogo = CargarDialogo("Prueba");
         StartCoroutine(MostrarDialogo(dialogo));
 
         while(!dialogo.finalizado_dialogo){
             yield return null;
         }
 
-
         UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
+    public void _BosquePrimeraInteraccion(){
+        StartCoroutine(BosquePrimeraInteraccion());
+    }
+
+    private IEnumerator BosquePrimeraInteraccion(){
+        NPC_Minotauro minotauro = GameObject.Find("MinotauroBosque").GetComponent<NPC_Minotauro>();
+
+        //Exclamacion
+
+        //Breve pausa
+        yield return new WaitForSeconds(0.5f);
+
+        //Girarse hacia arriba
+        minotauro.Girarse(Vector2.up);
+
+
+        yield return null;
     }
 }
