@@ -34,6 +34,7 @@ public class Historia : MonoBehaviour
     Player Player;
     public TMP_InputField inputField;
     public string nombreJugador;
+    public GameObject OpcionMultiple;
 
     void Start(){
         UI_Handler = FindFirstObjectByType<UI_Handler>();
@@ -109,7 +110,7 @@ public class Historia : MonoBehaviour
         NPC_Minotauro minotauro = GameObject.Find("MinotauroBosque").GetComponent<NPC_Minotauro>();
 
         //El personaje mira hacia debajo sino lo está
-        Player.SR.sprite = Player.vSprite[2];
+        Player.SR.sprite = Player.vSpriteFrente[0];
 
         //Exclamacion del minotauro por 2 segundos
         StartCoroutine(Icons.MostrarIcono(minotauro.gameObject,"exclamacion",1f));
@@ -184,6 +185,11 @@ public class Historia : MonoBehaviour
         //
         //METER ELECCION MULTIPLE
         //
+        OpcionMultiple.SetActive(true);
+
+        while(OpcionMultiple.activeSelf){
+            yield return null;
+        }
 
 
         //Dialogo id = 3

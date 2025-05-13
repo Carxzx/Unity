@@ -10,13 +10,22 @@ public class Player : MonoBehaviour
     public static Transform tf;
     public static SpriteRenderer SR;
     public static Rigidbody2D Rb;
+    Animator anim;
 
     static public bool CanMove;
 
     static public bool ChangeScenery;
     static public Collision2D collisionAux;
 
-    public Sprite[] vSprite; //0 = ARRIBA, 1 = DERECHA, 2 = ABAJO
+    Vector2 direccion;
+    public int fotograma;
+
+    public Sprite[] vSpriteFrente;
+    public Sprite[] vSpriteEspalda;
+    public Sprite[] vSpriteIzquierda;
+    public Sprite[] vSpriteDerecha;
+
+    public bool walking;
 
     void Awake(){
         tf = transform;
@@ -25,6 +34,10 @@ public class Player : MonoBehaviour
     }
 
     void Start(){
+        anim = GetComponent<Animator>();
+        walking = false;
+        fotograma = 0;
+        direccion = Vector2.down;
         CanMove = true;
         ChangeScenery = false;
     }
@@ -36,41 +49,49 @@ public class Player : MonoBehaviour
 
         if(CanMove){
             MovementHandler(MovementX,MovementY);
-            ManageSprite();
         }else{
             Rb.linearVelocity = Vector2.zero;
         }
+
+        if(PulsandoTecla() && (!PulsandoTeclasContrarias('X') || !PulsandoTeclasContrarias('Y'))){
+            walking = true;
+            anim.SetBool("walking",walking);
+            ManageSprite(direccion,fotograma);
+        }else{
+            walking = false;
+            anim.SetBool("walking",walking);
+            ManageSprite(direccion,0);
+        }
+
     }
 
-    void ManageSprite(){
-        if(Input.GetKey(KeyCode.W)){
-            SR.sprite = vSprite[0];
+    void ManageSprite(Vector2 dir, int fot){
+        direccion = ObtenerDireccion();
+        if(direccion == Vector2.up){
+            SR.sprite = vSpriteEspalda[fot];
         }
-        if(Input.GetKey(KeyCode.S)){
-            SR.sprite = vSprite[2];
+        if(direccion == Vector2.down){
+            SR.sprite = vSpriteFrente[fot];
         }
-        if(Input.GetKey(KeyCode.A)){
-            SR.sprite = vSprite[1];
-            SR.flipX = true;
+        if(direccion == Vector2.left){
+            SR.sprite = vSpriteIzquierda[fot];
         }
-        if(Input.GetKey(KeyCode.D)){
-            SR.sprite = vSprite[1];
-            SR.flipX = false;
+        if(direccion == Vector2.right){
+            SR.sprite = vSpriteDerecha[fot];
         }
     }
 
     public Vector2 ObtenerDireccion(){
-        if(SR.sprite == vSprite[0]){
+        if(Input.GetKey(KeyCode.W)){ //Movimiento hacia arriba
             return Vector2.up;
-        }else if(SR.sprite == vSprite[2]){
+        }else if(Input.GetKey(KeyCode.S)){ //Movimiento hacia debajo
             return Vector2.down;
-        }else{
-            if(SR.flipX){
-                return Vector2.left;
-            }else{
-                return Vector2.right;
-            }
+        }else if(Input.GetKey(KeyCode.D)){ //Movimiento hacia la derecha
+            return Vector2.right;
+        }else if(Input.GetKey(KeyCode.A)){ //Movimiento hacia la izquierda
+            return Vector2.left;
         }
+        return direccion;
     }
 
 
