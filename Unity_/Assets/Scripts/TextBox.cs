@@ -7,6 +7,7 @@ public class TextBox : MonoBehaviour
     const float TiempoEntreCaracteres = 0.03f;
 
     public TMP_Text Dialogue;
+    public TMP_Text Nombre;
     public GameObject triangle;
     int cont;
     public string message;

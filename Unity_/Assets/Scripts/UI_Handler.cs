@@ -10,6 +10,7 @@ public class UI_Handler : MonoBehaviour
     public GameObject TransitionCircle;
     public GameObject Inventory;
     public GameObject HotBar;
+    public GameObject Clock;
 
     Vector2 mousePosition;
     RaycastHit2D Raycast;
@@ -132,6 +133,7 @@ public class UI_Handler : MonoBehaviour
         TransitionCircle.SetActive(false);
         Inventory.SetActive(false);
         HotBar.SetActive(false);
+        Clock.SetActive(false);
 
         Player.CanMove = false;
     }
@@ -140,6 +142,7 @@ public class UI_Handler : MonoBehaviour
         EventTrigger = false;
 
         HotBar.SetActive(true);
+        Clock.SetActive(true);
         Player.CanMove = true;
     }
 }

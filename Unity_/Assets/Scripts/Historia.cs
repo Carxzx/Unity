@@ -31,17 +31,20 @@ public class Historia : MonoBehaviour
 
     UI_Handler UI_Handler;
     TextBox TextBox;
+    Player Player;
     public TMP_InputField inputField;
     public string nombreJugador;
 
     void Start(){
         UI_Handler = FindFirstObjectByType<UI_Handler>();
         TextBox = UI_Handler.TextBox.GetComponent<TextBox>();
+        Player = FindFirstObjectByType<Player>();
     }
 
     private IEnumerator MostrarDialogo(Dialogo dialogo){
         TextBox.gameObject.SetActive(true);
         int i = 0;
+        TextBox.Nombre.text = dialogo.personaje;
         dialogo.finalizado_dialogo = false;
         while(i < dialogo.lineas.Length){
             TextBox.message = dialogo.lineas[i];
@@ -104,6 +107,9 @@ public class Historia : MonoBehaviour
 
     private IEnumerator BosquePrimeraInteraccion(){
         NPC_Minotauro minotauro = GameObject.Find("MinotauroBosque").GetComponent<NPC_Minotauro>();
+
+        //El personaje mira hacia debajo sino lo está
+        Player.SR.sprite = Player.vSprite[2];
 
         //Exclamacion del minotauro por 2 segundos
         StartCoroutine(Icons.MostrarIcono(minotauro.gameObject,"exclamacion",1f));

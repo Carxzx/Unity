@@ -254,5 +254,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40798a9be2fbdb44ba85042ae32c7c7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tilemap: {fileID: 0}
   vidaPiedra: 0
   normal: 0
