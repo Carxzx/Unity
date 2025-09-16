@@ -8,7 +8,7 @@ public class Espada : MonoBehaviour
     const int rotacion = 179;
     const float tiempoRotacion = 0.3f;
 
-    const float RaycastDistance = 1f;
+    const float RaycastDistance = 1f; ///////////////////////////////////////////////////////////////////////////////////// 1f
     int layerMask;
 
     Vector2 direccion;
@@ -24,6 +24,7 @@ public class Espada : MonoBehaviour
     void Start() {
         Player = FindFirstObjectByType<Player>();
         layerMask = LayerMask.GetMask("EsqueletoTrigger");
+        //Debug.LogError("layerMask: " + layerMask);
 
 
         Vector2 offset = new Vector2(0, 0.8f);
@@ -73,18 +74,18 @@ public class Espada : MonoBehaviour
         float velocidadRotacion = grados / tiempoDeRotacion;
         float tiempoTranscurrido = 0f;
 
-        int cont = 0;
-
         ReproducirAleatorio();
+
+        bool entre = false;
 
         while(tiempoTranscurrido < tiempoDeRotacion){
             // Rotar gradualmente hacia el objetivo
             gameObject.transform.rotation = Quaternion.RotateTowards(gameObject.transform.rotation, objetivo, velocidadRotacion * Time.deltaTime);
             tiempoTranscurrido += Time.deltaTime;
-            if(cont == 50){
+            if(tiempoTranscurrido > tiempoDeRotacion/2 && !entre){
                 ComprobarGolpe();
+                entre = true;
             }
-            cont++;
             yield return null;  // Esperar al siguiente frame
         }
 
@@ -103,7 +104,10 @@ public class Espada : MonoBehaviour
 
         HashSet<Collider2D> collidersGolpeados = new HashSet<Collider2D>();
 
+
         RaycastHit2D[] raycasts1 = Physics2D.RaycastAll(posicion, direccion, RaycastDistance, layerMask);
+        //Debug.Log("Raycast1: " + raycasts1[0]);
+        Debug.DrawRay(posicion, direccion * RaycastDistance, Color.red);
 
         if(direccion == Vector2.up || direccion == Vector2.down){
             posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+0.5f) + new Vector2(0.5f,0f);
@@ -111,6 +115,8 @@ public class Espada : MonoBehaviour
             posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+0.5f) + new Vector2(0f,0.7f);
         }
         RaycastHit2D[] raycasts2 = Physics2D.RaycastAll(posicion,direccion,RaycastDistance,layerMask);
+        //Debug.Log("Raycast2: " + raycasts2[0]);
+        Debug.DrawRay(posicion, direccion * RaycastDistance, Color.red);
 
         if(direccion == Vector2.up || direccion == Vector2.down){
             posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+0.5f) - new Vector2(0.5f,0f);
@@ -118,25 +124,26 @@ public class Espada : MonoBehaviour
             posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+0.5f) - new Vector2(0f,0.7f);
         }
         RaycastHit2D[] raycasts3 = Physics2D.RaycastAll(posicion,direccion,RaycastDistance,layerMask);
+        //Debug.Log("Raycast3: " + raycasts3[0]);
+        Debug.DrawRay(posicion, direccion * RaycastDistance, Color.red);
+
 
         foreach (var hit in raycasts1) {
             if (hit.collider != null && collidersGolpeados.Add(hit.collider)) {
                 GolpearEsqueleto(hit.collider, direccion);
-                //Debug.Log("Hit a: " + hit.collider.gameObject.transform.parent.name);
             }
         }
         foreach (var hit in raycasts2) {
             if (hit.collider != null && collidersGolpeados.Add(hit.collider)) {
                 GolpearEsqueleto(hit.collider, direccion);
-                //Debug.Log("Hit a: " + hit.collider.gameObject.transform.parent.name);
             }
         }
         foreach (var hit in raycasts3) {
             if (hit.collider != null && collidersGolpeados.Add(hit.collider)) {
                 GolpearEsqueleto(hit.collider, direccion);
-                //Debug.Log("Hit a: " + hit.collider.gameObject.transform.parent.name);
             }
         }
+
     }
 
 

@@ -42,6 +42,8 @@ public class Esqueleto : MonoBehaviour
     private float radioMax = 7f;
     private float volumenMax = 0.1f;
 
+    const float difMax = 0.01f;
+
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -53,8 +55,8 @@ public class Esqueleto : MonoBehaviour
         layerTrigger = LayerMask.NameToLayer("EsqueletoTrigger");
         layerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
         layerHerramienta = LayerMask.NameToLayer("Herramienta");
-        layerObjeto = LayerMask.NameToLayer("Objeto");
-        layerMask = ~( (1 << layerEsqueleto) | (1 << layerIgnoreRaycast) | (1 << layerTrigger) | (1 << layerHerramienta) | (1 << layerObjeto) ); // Ignora ambas layers
+
+        layerMask = ~( (1 << layerEsqueleto) | (1 << layerIgnoreRaycast) | (1 << layerTrigger) | (1 << layerHerramienta)); // Ignora ambas layers
     }
 
     void FixedUpdate()
@@ -97,10 +99,10 @@ public class Esqueleto : MonoBehaviour
         
         // Caso 1: esquina1 libre, centro y esquina2 bloqueados
         if (direccionPrincipal == Vector2.up || direccionPrincipal == Vector2.down){
-            if(diferencia.x > 0.005f){
+            if(diferencia.x > difMax){
                 prioridad = false;
                 direccion = Vector2.right;
-            }else if(diferencia.x < -0.005f){
+            }else if(diferencia.x < -difMax){
                 prioridad = false;
                 direccion = Vector2.left;
             }else{
@@ -111,10 +113,10 @@ public class Esqueleto : MonoBehaviour
                 }
             }
         }else{
-            if(diferencia.y > 0.005f){
+            if(diferencia.y > difMax){
                 prioridad = true;
                 direccion = Vector2.up;
-            }else if(diferencia.y < -0.005f){
+            }else if(diferencia.y < -difMax){
                 prioridad = true;
                 direccion = Vector2.down;
             }else{
@@ -202,10 +204,14 @@ public class Esqueleto : MonoBehaviour
         RaycastHit2D hit2 = Physics2D.Raycast(start2, direccion, RaycastDistance, layerMask);
         RaycastHit2D hitCenter = Physics2D.Raycast(startCenter, direccion, RaycastDistance, layerMask);
 
-        // Debug
-        Debug.DrawRay(start1, direccion * RaycastDistance, Color.red);
-        Debug.DrawRay(start2, direccion * RaycastDistance, Color.red);
-        Debug.DrawRay(startCenter, direccion * RaycastDistance, Color.red);
+        // Debug en build
+        Debug.DrawRay(start1, direccion * RaycastDistance, Color.red, 1f);
+        Debug.DrawRay(start2, direccion * RaycastDistance, Color.red, 1f);
+        Debug.DrawRay(startCenter, direccion * RaycastDistance, Color.red, 1f);
+
+        //Debug.Log("Raycast " + direccion + " desde " + start1 + " golpea: " + (hit1.collider ? hit1.collider.gameObject.name : "null"));
+        //Debug.Log("Raycast " + direccion + " desde " + start2 + " golpea: " + (hit2.collider ? hit2.collider.gameObject.name : "null"));
+        //Debug.Log("Raycast " + direccion + " desde " + startCenter + " golpea: " + (hitCenter.collider ? hitCenter.collider.gameObject.name : "null"));
 
         return new RaycastHit2D[] { hit1, hitCenter, hit2 };
     }
@@ -216,7 +222,12 @@ public class Esqueleto : MonoBehaviour
 
         if(!reposicionar && !retroceder){
             Vector3 dif = Player.tf.position - transform.position;
-            if(persiguiendo && Mathf.Abs(dif.x) < 0.005f && Mathf.Abs(dif.y) < 0.005f){
+
+            if(Player.tf == null){
+                //Debug.LogError("Player.tf no está asignado");
+                return;
+            }
+            if(persiguiendo && Mathf.Abs(dif.x) < difMax && Mathf.Abs(dif.y) < difMax){
                 walking = false;
                 rb.linearVelocity = Vector2.zero;
             }else if (persiguiendo){
@@ -227,7 +238,7 @@ public class Esqueleto : MonoBehaviour
 
                 // Primero mueve en Y hasta estar alineado, luego en X
                 if(prioridad){
-                    if (Mathf.Abs(direccion.y) > 0.005f)
+                    if (Mathf.Abs(direccion.y) > difMax)
                     {
                         movimiento.y = Mathf.Sign(direccion.y) * distancePerFrame * Time.deltaTime;
                         if(direccion.y < 0){
@@ -236,7 +247,7 @@ public class Esqueleto : MonoBehaviour
                             direccion = Vector2.up;
                         }
                     }
-                    else if (Mathf.Abs(direccion.x) > 0.005f)
+                    else if (Mathf.Abs(direccion.x) > difMax)
                     {
                         prioridad = false;
                         movimiento.x = Mathf.Sign(direccion.x) * distancePerFrame * Time.deltaTime;
@@ -250,7 +261,7 @@ public class Esqueleto : MonoBehaviour
                     transform.position = inicio + movimiento;
                     walking = true;
                 }else{
-                    if (Mathf.Abs(direccion.x) > 0.005f)
+                    if (Mathf.Abs(direccion.x) > difMax)
                     {
                         movimiento.x = Mathf.Sign(direccion.x) * distancePerFrame * Time.deltaTime;
                         if(direccion.x < 0){
@@ -259,7 +270,7 @@ public class Esqueleto : MonoBehaviour
                             direccion = Vector2.right;
                         }
                     }
-                    else if (Mathf.Abs(direccion.y) > 0.005f)
+                    else if (Mathf.Abs(direccion.y) > difMax)
                     {
                         prioridad = true;
                         movimiento.y = Mathf.Sign(direccion.y) * distancePerFrame * Time.deltaTime;
@@ -283,7 +294,7 @@ public class Esqueleto : MonoBehaviour
 
                 // Primero mueve en Y hasta estar alineado, luego en X
                 if(prioridad){
-                    if (Mathf.Abs(direccion.y) > 0.005f)
+                    if (Mathf.Abs(direccion.y) > difMax)
                     {
                         movimiento.y = Mathf.Sign(direccion.y) * distancePerFrame * Time.deltaTime;
                         if(direccion.y < 0){
@@ -292,7 +303,7 @@ public class Esqueleto : MonoBehaviour
                             direccion = Vector2.up;
                         }
 
-                    }else if (Mathf.Abs(direccion.x) > 0.005f)
+                    }else if (Mathf.Abs(direccion.x) > difMax)
                     {
                         movimiento.x = Mathf.Sign(direccion.x) * distancePerFrame * Time.deltaTime;
                         if(direccion.x < 0){
@@ -305,7 +316,7 @@ public class Esqueleto : MonoBehaviour
                     transform.position = inicio + movimiento;
                     walking = true;
                 }else{
-                    if (Mathf.Abs(direccion.x) > 0.005f)
+                    if (Mathf.Abs(direccion.x) > difMax)
                     {
                         movimiento.x = Mathf.Sign(direccion.x) * distancePerFrame * Time.deltaTime;
                         if(direccion.x < 0){
@@ -314,7 +325,7 @@ public class Esqueleto : MonoBehaviour
                             direccion = Vector2.right;
                         }
                     }
-                    else if (Mathf.Abs(direccion.y) > 0.005f)
+                    else if (Mathf.Abs(direccion.y) > difMax)
                     {
                         movimiento.y = Mathf.Sign(direccion.y) * distancePerFrame * Time.deltaTime;
                         if(direccion.y < 0){

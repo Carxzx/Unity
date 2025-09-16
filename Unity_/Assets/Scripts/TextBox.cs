@@ -71,13 +71,13 @@ public class TextBox : MonoBehaviour
             if(tiempo > TiempoEntreCaracteres){
                 PrintMessage(message);
             }
-            if(Input.GetMouseButtonDown(0)){
+            if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)){
                 cont = message.Length;
             }
         }
 
         //Si el mensaje se ha completado, y el usuario pulsa el click izquierdo, se quita el Cuadro de Texto
-        if(messageComplete && Input.GetMouseButtonDown(0)){
+        if(messageComplete && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))){
             ReiniciarObject();
             bandera = true;
             //UI_Handler.OcultarUI(gameObject);

@@ -1073,6 +1073,8 @@ public class Historia : MonoBehaviour
         numDialogo++;
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
 
+        yield return new WaitForSeconds(0.5f);
+
         //Dialogo id = 1
         StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
 
@@ -1087,6 +1089,8 @@ public class Historia : MonoBehaviour
         Player.Moverse(inicio,fin,distancePerFrame);
 
         PlayerCamera.BloquearCamara = false;
+
+        yield return new WaitForSeconds(0.5f);
 
         UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
     }

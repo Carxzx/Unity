@@ -72,17 +72,17 @@ public class Pico : MonoBehaviour
         float velocidadRotacion = grados / tiempoDeRotacion;
         float tiempoTranscurrido = 0f;
 
-        int cont = 0;
+        bool entre = false;
 
         audio.PlayOneShot(sonido);
 
         while(tiempoTranscurrido < tiempoDeRotacion){
             // Rotar gradualmente hacia el objetivo
             gameObject.transform.rotation = Quaternion.RotateTowards(gameObject.transform.rotation, objetivo, velocidadRotacion * Time.deltaTime);
-            if(cont == 30){
+            if(tiempoTranscurrido > tiempoDeRotacion/2 && !entre){
                 ComprobarGolpe();
+                entre = true;
             }
-            cont++;
             tiempoTranscurrido += Time.deltaTime;
             yield return null;  // Esperar al siguiente frame
         }
@@ -120,17 +120,14 @@ public class Pico : MonoBehaviour
 
         if (Raycast1.collider != null && collidersGolpeados.Add(Raycast1.collider)) {
             GolpearPiedra(Raycast1.collider);
-            //Debug.Log("Hit a: " + hit.collider.gameObject.transform.parent.name);
         }
 
         if (Raycast2.collider != null && collidersGolpeados.Add(Raycast2.collider)) {
             GolpearPiedra(Raycast2.collider);
-            //Debug.Log("Hit a: " + hit.collider.gameObject.transform.parent.name);
         }
 
         if (Raycast3.collider != null && collidersGolpeados.Add(Raycast3.collider)) {
             GolpearPiedra(Raycast3.collider);
-            //Debug.Log("Hit a: " + hit.collider.gameObject.transform.parent.name);
         }
     }
 
@@ -152,7 +149,7 @@ public class Pico : MonoBehaviour
 
         AudioSource aSource = tempGO.AddComponent<AudioSource>();
         aSource.clip = clip;
-        aSource.volume = 0.25f;
+        aSource.volume = 0.2f;
         aSource.Play();
 
         Destroy(tempGO, clip.length);

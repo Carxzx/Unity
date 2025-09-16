@@ -70,11 +70,6 @@ public class HotBar : MonoBehaviour
             MouseScrollWheel(input);
         }
 
-        //Pulsar Tabulador
-        if(Input.GetKeyDown(KeyCode.Tab)){
-            ManejarRow();
-        }
-
         //Pulsar Click Izquierdo
         if(Input.GetKeyDown(KeyCode.Mouse0) && Player.CanMove){
             if(!EventSystem.current.IsPointerOverGameObject()){
@@ -86,18 +81,6 @@ public class HotBar : MonoBehaviour
         PulsarNum();
 
         MoverHotBar();
-
-        if(Input.GetKeyDown(KeyCode.H)){
-            SceneManager.LoadScene("CarroScene");
-        }
-    }
-
-    void ManejarRow(){
-        RowActual++;
-        if(RowActual > MaxRows-1){
-            RowActual = 0;
-        }
-        ActualizarHotBar();
     }
 
     void MoverHotBar(){
@@ -134,7 +117,10 @@ public class HotBar : MonoBehaviour
             KeyCode keypadKey = KeyCode.Keypad0 + i;
 
             if (Input.GetKeyDown(alphaKey) || Input.GetKeyDown(keypadKey)){
-                seleccionado = i;
+                seleccionado = i - 1;
+                if(seleccionado == -1){
+                    seleccionado = 9;
+                }
                 MoverCuadroSeleccion();
             }
         }

@@ -127,7 +127,6 @@ public class UI_Handler : MonoBehaviour
 
         for (int i = 0; i < hits.Length; i++){
             if(hits[i].collider != null && hits[i].collider.CompareTag("OutOfBoundsDoor")){
-                Debug.Log(hits[i].collider);
                 ActivarUI(TransitionCircle);
                 yield return new WaitForSeconds(0.5f); // Espera los primeros 0.5 segundos
                 Door.PlayerTP(TransitionCircle, hits[i].collider.GetComponent<Door>());
