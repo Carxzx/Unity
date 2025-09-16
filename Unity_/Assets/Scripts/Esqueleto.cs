@@ -210,9 +210,10 @@ public class Esqueleto : MonoBehaviour
         return new RaycastHit2D[] { hit1, hitCenter, hit2 };
     }
 
-    //// COMPROBAR EL WALKING
     void Update()
     {
+        if(Player.BloquearMovimiento) return;
+
         if(!reposicionar && !retroceder){
             Vector3 dif = Player.tf.position - transform.position;
             if(persiguiendo && Mathf.Abs(dif.x) < 0.005f && Mathf.Abs(dif.y) < 0.005f){

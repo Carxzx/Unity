@@ -102,7 +102,6 @@ public class Player : MonoBehaviour
             timer -= Time.deltaTime;       // reduce el temporizador
             if (timer <= 0f)               // cuando llega a 0, reproducimos
             {
-                Debug.Log("Reproduciendo sonido de paso");
                 paso.Play();               // o paso.PlayOneShot(paso.clip) si quieres
                 timer = intervalo;         // reinicia el temporizador
             }

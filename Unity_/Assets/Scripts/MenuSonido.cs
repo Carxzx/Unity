@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class MenuSonido : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class MenuSonido : MonoBehaviour
     public bool primeravez = true;
 
     void Start(){
-        primeravez = false;
+        primeravez = true;
     }
 
     void OnEnable(){
@@ -36,6 +37,7 @@ public class MenuSonido : MonoBehaviour
         tempAudio.loop = original.loop;
 
         tempAudio.Play();
+        Debug.Log("hola");
 
         // Destruir cuando termine de sonar
         Destroy(tempGO, original.clip.length+0.1f);

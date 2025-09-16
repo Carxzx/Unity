@@ -48,7 +48,8 @@
       "id": 6,
       "personaje": "Minotauro",
       "lineas": [
-        "Este bosque marca el límite de Villa Solaris. Mi aldea está al oeste de aquí.",
+        "Te encuentras en la Región de Serelis.",
+        "Este bosque marca el límite de Villa Tharok. Mi aldea está al oeste de aquí.",
         "Por cierto, ¿cómo te llamas?"
       ]
     },
@@ -73,7 +74,7 @@
       "personaje": "Minotauro",
       "lineas": [
         "Ven, sígueme, te llevaré al pueblo. Tan solo quédate cerca de mí.",
-        "Solaris está al oeste de aquí."
+        "Tharok está al oeste de aquí."
       ]
     }
   ]

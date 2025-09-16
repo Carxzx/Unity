@@ -26,7 +26,7 @@ public class TextBox : MonoBehaviour
     public Sprite cajaNormal;
     public Sprite cajaConPersonaje;
 
-    public AudioSource audio;
+    public AudioSource audiosource;
 
     bool alternar;
     
@@ -112,7 +112,7 @@ public class TextBox : MonoBehaviour
             cont++;
 
             if(alternar){
-                ReproducirDesdeAudioSource(audio);
+                ReproducirDesdeAudioSource(audiosource);
             }
             alternar = !alternar;
 

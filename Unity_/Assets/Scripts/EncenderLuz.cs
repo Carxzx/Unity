@@ -10,7 +10,7 @@ public class EncenderLuz : MonoBehaviour
 
     Animator anim;
 
-    public AudioSource audio;
+    public AudioSource audiosource;
 
     bool once = false;
 
@@ -21,7 +21,7 @@ public class EncenderLuz : MonoBehaviour
         anim = GetComponent<Animator>();
         Clock = FindFirstObjectByType<Clock>();
         luz = GetComponent<Light2D>();
-        audio = GetComponent<AudioSource>();
+        audiosource = GetComponent<AudioSource>();
     }
 
     void Update(){
@@ -32,14 +32,14 @@ public class EncenderLuz : MonoBehaviour
         if(Clock.hour == Apagar){
             luz.enabled = false;
             once = false;
-            audio.Stop();
+            audiosource.Stop();
         }
 
         anim.SetBool("onFire",luz.enabled);
 
         if(once){
-            if (!audio.isPlaying){
-                audio.Play();
+            if (!audiosource.isPlaying){
+                audiosource.Play();
             }
 
             // Calcular distancia al oyente
@@ -50,9 +50,9 @@ public class EncenderLuz : MonoBehaviour
                 float t = 1f - (distancia / radioMax); // 0 cuando lejos, 1 cuando cerca
                 float volumen = Mathf.Clamp01(t * t) * volumenMax;
 
-                audio.volume = volumen;
+                audiosource.volume = volumen;
             }else{
-                audio.volume = 0f; // fuera del rango no se escucha nada
+                audiosource.volume = 0f; // fuera del rango no se escucha nada
             }
         }
     }

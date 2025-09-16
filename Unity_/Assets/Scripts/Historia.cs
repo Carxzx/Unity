@@ -37,8 +37,6 @@ public class Historia : MonoBehaviour
     public PlayerCamera PlayerCamera;
     public TMP_InputField inputField;
     static public string nombreJugador;
-    public GameObject OpcionMultiple;
-    public GameObject spriteChavalin;
 
     public Sprite Flor1;
     public Sprite Flor2;
@@ -151,10 +149,7 @@ public class Historia : MonoBehaviour
     }
 
     private IEnumerator AcabaDeLlegar(){
-
-
-        //AÑADIR DELAY DEL FUNDIDO
-
+        yield return new WaitForSeconds(0.5f);
 
         float distancePerFrame = 3;
         

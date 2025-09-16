@@ -86,12 +86,14 @@ public class UI_Handler : MonoBehaviour
 
     public static void ActivarUI(GameObject objeto){
         Player.CanMove = false;
+        Player.BloquearMovimiento = true;
         ActiveUI = true;
         objeto.SetActive(true);
     }
 
     public static void OcultarUI(GameObject objeto){
         Player.CanMove = true;
+        Player.BloquearMovimiento = false;
         ActiveUI = false;
         objeto.SetActive(false);
     }
