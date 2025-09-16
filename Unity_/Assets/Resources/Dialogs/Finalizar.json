@@ -1,0 +1,26 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "Minotauro",
+      "lineas": [
+        "!Felicidades, {nombre}!",
+        "¡Has completado la demo del juego!"
+      ]
+    },
+    {
+      "id": 1,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Ahora puedes continuar explorando si quieres."
+      ]
+    },
+    {
+      "id": 2,
+      "personaje": "{nombre}",
+      "lineas": [
+        "¡Genial!"
+      ]
+    }
+  ]
+}

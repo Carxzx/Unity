@@ -30,6 +30,7 @@ public class EncenderLuz : MonoBehaviour
             once = true;
         }
         if(Clock.hour == Apagar){
+            luz.enabled = false;
             once = false;
             audio.Stop();
         }

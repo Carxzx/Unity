@@ -94,7 +94,6 @@ public class Esqueleto : MonoBehaviour
         if(!e1 && !c && !e2) return;
 
         Vector2 diferencia = Player.tf.position - transform.position;
-        bool granCorrecion = false;
         
         // Caso 1: esquina1 libre, centro y esquina2 bloqueados
         if (direccionPrincipal == Vector2.up || direccionPrincipal == Vector2.down){

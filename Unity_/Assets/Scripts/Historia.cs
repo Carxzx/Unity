@@ -146,6 +146,61 @@ public class Historia : MonoBehaviour
         UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
     }
 
+    public void _AcabaDeLlegar(){
+        StartCoroutine(AcabaDeLlegar());
+    }
+
+    private IEnumerator AcabaDeLlegar(){
+
+
+        //AÑADIR DELAY DEL FUNDIDO
+
+
+        float distancePerFrame = 3;
+        
+        Player.Moverse(Player.tf.position,Player.tf.position + Vector3.down * 7, distancePerFrame);
+
+        while(Player.moverse){
+            yield return null;
+        }
+
+        Player.Girarse(Vector2.down);
+
+        //Breve pausa tras dejar de moverse
+        yield return new WaitForSeconds(0.5f);
+
+        //Empieza el dialogo
+        BloquesDialogo bloques = CargarDialogo("AcabaDeLlegar");
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+        numDialogo++;
+
+        //Breve pausa
+        yield return new WaitForSeconds(0.5f);
+
+        StartCoroutine(Icons.MostrarIcono(Player.gameObject,"pensativo",1f));
+
+        yield return new WaitForSeconds(1.5f);
+
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
     public void _BosquePrimeraInteraccion(){
         StartCoroutine(BosquePrimeraInteraccion());
     }
@@ -937,7 +992,52 @@ public class Historia : MonoBehaviour
     }
 
     public IEnumerator Finalizar(){
-        yield return null;
+        NPC_Minotauro minotauro = GameObject.Find("Minotauro_NPC").GetComponent<NPC_Minotauro>();
+
+        yield return new WaitForSeconds(0.5f);
+
+        StartCoroutine(Icons.MostrarIcono(minotauro.gameObject,"smile",1f));
+        yield return new WaitForSeconds(1.5f);
+
+        BloquesDialogo bloques = CargarDialogo("Finalizar");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 1
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        StartCoroutine(Icons.MostrarIcono(Player.gameObject,"smile",1f));
+        yield return new WaitForSeconds(1.5f);
+
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
     }
 
     public void _Esqueletos(){

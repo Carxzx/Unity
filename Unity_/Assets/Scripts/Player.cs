@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections;
 
 public class Player : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class Player : MonoBehaviour
     static public bool walking;
 
 
-    private bool moverse = false;
+    public static bool moverse = false;
     private Vector3 inicio;
     private Vector3 fin;
     private float distancePerFrame;
@@ -55,9 +56,15 @@ public class Player : MonoBehaviour
         CanMove = true;
         ChangeScenery = false;
         BloquearMovimiento = false;
+
+        StartCoroutine(AcabaDeLlegar());
     }
 
-    
+    IEnumerator AcabaDeLlegar(){
+        yield return null;
+        GetComponent<EventTrigger>().Dialogo();
+    }
+
     void Update(){
         float MovementX = Input.GetAxisRaw("Horizontal") * speed;
         float MovementY = Input.GetAxisRaw("Vertical") * speed;
@@ -90,7 +97,7 @@ public class Player : MonoBehaviour
             AsignarSprite(dir,fotograma);
         }
 
-        if (walking)
+        if (walking || moverse)
         {
             timer -= Time.deltaTime;       // reduce el temporizador
             if (timer <= 0f)               // cuando llega a 0, reproducimos

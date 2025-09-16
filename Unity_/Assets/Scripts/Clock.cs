@@ -23,7 +23,7 @@ public class Clock : MonoBehaviour
 
     Color dia = Color.white;
     Color tarde = HexToColor("#EA8E3D"); //DE883C
-    Color noche = HexToColor("#14163F");
+    Color noche = HexToColor("#412F3F");
 
     void Start(){
         luzGlobal = GameObject.Find("Global Light 2D").GetComponent<Light2D>();
@@ -77,6 +77,7 @@ public class Clock : MonoBehaviour
         const int EmpiezaAtardecer = 14;
         const int EmpiezaOscurecer = 20;
         const int PararOscurecer = 24;
+        const int EmpiezaAmanecer = 6;
 
         if(hour >= WakeUp && hour < EmpiezaAtardecer){ //Desde las 8h a las 14h es totalmente de día
             normalizedTime = 0f;
@@ -86,6 +87,9 @@ public class Clock : MonoBehaviour
         }else if(hour >= EmpiezaOscurecer && hour < PararOscurecer){ //Empieza a Oscurecer a las 20h
             normalizedTime = (hour - EmpiezaOscurecer + (minute / 60f)) / (PararOscurecer - EmpiezaOscurecer);
             luzGlobal.color = Color.Lerp(tarde, noche, normalizedTime);
+        }else if(hour >= EmpiezaAmanecer && hour < WakeUp){ // De 6h a 8h amanecer
+            normalizedTime = ((hour - EmpiezaAmanecer + (minute / 60f)) / (WakeUp - EmpiezaAmanecer));
+            luzGlobal.color = Color.Lerp(noche, dia, normalizedTime);
         }else{ //De las 0h a las 2h es totalmente de noche
             normalizedTime = 1f;
         }

@@ -1,0 +1,19 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "Jugador",
+      "lineas": [
+        "Ugh...",
+        "¿Dónde estoy? ¿Cómo he acabado aquí?"
+      ]
+    },
+    {
+      "id": 1,
+      "personaje": "Jugador",
+      "lineas": [
+        "Debería explorar un poco los alrededores."
+      ]
+    }
+  ]
+}
