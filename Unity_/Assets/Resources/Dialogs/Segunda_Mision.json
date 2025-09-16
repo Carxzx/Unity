@@ -1,0 +1,51 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "Minotauro",
+      "lineas": [
+        "¡Genial, has conseguido todos los materiales que te pedí!"
+      ]
+    },
+    {
+      "id": 1,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Uhmm... Ahora que lo pienso... Puede que también necesite algo más."
+      ]
+    },
+    {
+      "id": 2,
+      "personaje": "{nombre}",
+      "lineas": [
+        "¿De qué se trata?"
+      ]
+    },
+    {
+      "id": 3,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Necesito que te dirijas al desierto, {nombre}, para recoger un poco de roca.",
+        "Las necesito para unos asuntos personales importantes.",
+        "¿Podrías hacerlo?"
+      ]
+    },
+    {
+      "id": 4,
+      "personaje": "{nombre}",
+      "lineas": [
+        "Por supuesto, cuenta con ello."
+      ]
+    },
+    {
+      "id": 5,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Genial. El desierto se ubica al sureste del bosque, cruzando el puente este del prado de las flores.",
+        "Toma este pico, lo necesitarás para minar las rocas, sobre todo la que bloquea el puente de acceso.",
+        "Necesitaré al menos 32 piedras, así que asegúrate de recoger suficientes, no deberías tener problemas.",
+        "Buena suerte, estaré esperándote aquí mismo."
+      ]
+    }
+  ]
+}

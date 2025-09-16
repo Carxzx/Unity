@@ -1,0 +1,49 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "Minotauro",
+      "lineas": [
+        "¡{nombre}! ¿Qué ocurre?"
+      ]
+    },
+    {
+      "id": 1,
+      "personaje": "{nombre}",
+      "lineas": [
+        "¡Al llegar al desierto me he encontrado con unos esqueletos vivientes!",
+        "¡Tenían espadas! Y desde luego no tenían cara de buenos amigos."
+      ]
+    },
+    {
+      "id": 2,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Tranquilo {nombre}, no te preocupes. Si bien son criaturas hostiles, no son invencibles.",
+        "Esos esqueletos son en realidad muy débiles.",
+        "Su mayor debilidad es que son realmente lentos, ya que no tienen articulaciones."
+      ]
+    },
+    {
+      "id": 3,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Supongo que no serán un problema para ti, así que te daré esta espada para que puedas hacerles frente."
+      ]
+    },
+    {
+      "id": 4,
+      "personaje": "{nombre}",
+      "lineas": [
+        "De acuerdo, acabaré con todos ellos."
+      ]
+    },
+    {
+      "id": 5,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Perfecto, trae entonces las 32 piedras que te había dicho y algunos huesos de los esqueletos que mates."
+      ]
+    }
+  ]
+}

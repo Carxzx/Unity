@@ -11,42 +11,49 @@
     },
     {
       "id": 1,
-      "personaje": "Minotauro",
+      "personaje": "Jugador",
       "lineas": [
-        "Pensé que este bosque ya no era visitado por los tuyos..."
+        "No... No sé, creo que me he perdido..."
       ]
     },
     {
       "id": 2,
       "personaje": "Minotauro",
       "lineas": [
-        "No pareces un cazador. ¿Estás perdido?"
+        "Pensé que este bosque ya no era visitado por los tuyos..."
       ]
     },
     {
       "id": 3,
       "personaje": "Minotauro",
       "lineas": [
-        "Perderse en un bosque encantado no es algo que deba tomarse a la ligera..."
+        "No pareces un cazador. ¿Estás perdido?"
       ]
     },
     {
       "id": 4,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Perderse en un bosque encantado no es algo que deba tomarse a la ligera..."
+      ]
+    },
+    {
+      "id": 5,
       "personaje": "Jugador",
       "lineas": [
         "¿Dónde estoy exactamente?"
       ]
     },
     {
-      "id": 5,
+      "id": 6,
       "personaje": "Minotauro",
       "lineas": [
-        "Este bosque marca el límite de la villa de “Nombre de villa” . Mi aldea está al oeste de aquí.",
+        "Este bosque marca el límite de Villa Solaris. Mi aldea está al oeste de aquí.",
         "Por cierto, ¿cómo te llamas?"
       ]
     },
     {
-      "id": 6,
+      "id": 7,
       "personaje": "Minotauro",
       "lineas": [
         "Bien, {nombre}. Si no recuerdas cómo llegaste, lo mejor será que vengas conmigo.",
@@ -54,18 +61,19 @@
       ]
     },
     {
-      "id": 7,
+      "id": 8,
       "personaje": "Minotauro",
       "lineas": [
-        "<< No debería traerle… >>",
+        "<< No debería traerle... >>",
         "<< Bueno, no creo que pase nada. >>"
       ]
     },
     {
-      "id": 8,
+      "id": 9,
       "personaje": "Minotauro",
       "lineas": [
-        "Ven. Te llevaré al pueblo. Solo quédate cerca."
+        "Ven, sígueme, te llevaré al pueblo. Tan solo quédate cerca de mí.",
+        "Solaris está al oeste de aquí."
       ]
     }
   ]

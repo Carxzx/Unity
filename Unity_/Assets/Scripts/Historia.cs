@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.UI;
 
 public class Historia : MonoBehaviour
 {
@@ -32,20 +33,60 @@ public class Historia : MonoBehaviour
     UI_Handler UI_Handler;
     TextBox TextBox;
     Player Player;
+    public InventoryData InventoryData;
+    public PlayerCamera PlayerCamera;
     public TMP_InputField inputField;
-    public string nombreJugador;
+    static public string nombreJugador;
     public GameObject OpcionMultiple;
+    public GameObject spriteChavalin;
+
+    public Sprite Flor1;
+    public Sprite Flor2;
+    public Sprite Flor3;
+    public Sprite Madera;
+    public Sprite Piedra;
+    public Sprite Hueso;
+
+    private bool SawSkeletons = false;
 
     void Start(){
         UI_Handler = FindFirstObjectByType<UI_Handler>();
         TextBox = UI_Handler.TextBox.GetComponent<TextBox>();
         Player = FindFirstObjectByType<Player>();
+        nombreJugador = "";
+    }
+
+    void ActivarEvento(string nombre){
+        Transform t = null;
+        foreach (Transform tr in Resources.FindObjectsOfTypeAll<Transform>()) {
+            if (tr.name == nombre) {
+                t = tr;
+                break;
+            }
+        }
+        if (t != null) {
+            t.gameObject.SetActive(true);
+        }
+    }
+
+    void DesactivarEvento(string nombre){
+        Transform t = null;
+        foreach (Transform tr in Resources.FindObjectsOfTypeAll<Transform>()) {
+            if (tr.name == nombre) {
+                t = tr;
+                break;
+            }
+        }
+        if (t != null) {
+            t.gameObject.SetActive(false);
+        }
     }
 
     private IEnumerator MostrarDialogo(Dialogo dialogo){
         TextBox.gameObject.SetActive(true);
         int i = 0;
         TextBox.Nombre.text = dialogo.personaje;
+        TextBox.personaje = dialogo.personaje;
         dialogo.finalizado_dialogo = false;
         while(i < dialogo.lineas.Length){
             TextBox.message = dialogo.lineas[i];
@@ -56,19 +97,22 @@ public class Historia : MonoBehaviour
             i++;
         }
         dialogo.finalizado_dialogo = true;
+        TextBox.personaje = "";
         TextBox.gameObject.SetActive(false);
     }
 
     void ActualizarNombreJSON(BloquesDialogo bloques){
-        if (PlayerPrefs.HasKey("nombreJugador")){
-            string nombreJugador = PlayerPrefs.GetString("nombreJugador");
-            inputField.text = nombreJugador;
-            foreach (Dialogo d in bloques.dialogo){
-                for (int i = 0; i < d.lineas.Length; i++){
-                    d.lineas[i] = d.lineas[i].Replace("{nombre}", nombreJugador);
-                }
+        foreach (Dialogo d in bloques.dialogo){
+            d.personaje = d.personaje.Replace("{nombre}", nombreJugador);
+            for (int i = 0; i < d.lineas.Length; i++){
+                d.lineas[i] = d.lineas[i].Replace("{nombre}", nombreJugador);
             }
         }
+    }
+
+    public void _GirarseHaciaArriba(){
+        //El personaje mira hacia arriba sino lo está
+        Player.SR.sprite = Player.vSpriteEspalda[0];
     }
 
     public void _Prueba(){
@@ -83,7 +127,7 @@ public class Historia : MonoBehaviour
 
         Vector2 inicio = pos;
         Vector2 fin = new Vector2(inicio.x, Player.tf.position.y - 2);
-        float distancePerFrame = 0.01f; //0.02f
+        float distancePerFrame = 1; //0,01f
 
         minotauro.Moverse(inicio,fin,distancePerFrame);
 
@@ -124,7 +168,7 @@ public class Historia : MonoBehaviour
 
         Vector2 inicio = minotauro.transform.position;
         Vector2 fin = new Vector2(Player.tf.position.x, inicio.y);
-        float distancePerFrame = 0.01f; //0.02f
+        float distancePerFrame = 3; //0,01f
         minotauro.Moverse(inicio,fin,distancePerFrame);
 
         while(minotauro.walking){
@@ -144,7 +188,6 @@ public class Historia : MonoBehaviour
 
         //Empieza el dialogo
         BloquesDialogo bloques = CargarDialogo("BosquePrimeraInteraccion");
-        ActualizarNombreJSON(bloques);
         int numDialogo = 0;
 
         //Dialogo id = 0
@@ -153,8 +196,9 @@ public class Historia : MonoBehaviour
         while(!bloques.dialogo[numDialogo].finalizado_dialogo){
             yield return null;
         }
-        numDialogo++;
+        
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
+        numDialogo++;
 
         //Breve pausa
         yield return new WaitForSeconds(0.5f);
@@ -165,12 +209,12 @@ public class Historia : MonoBehaviour
         while(!bloques.dialogo[numDialogo].finalizado_dialogo){
             yield return null;
         }
-        numDialogo++;
+        
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
+        numDialogo++;
 
-        //duda del minotauro por 1 segundo
-        StartCoroutine(Icons.MostrarIcono(minotauro.gameObject,"duda",1f));
-        yield return new WaitForSeconds(1.5f);
+        //Breve pausa
+        yield return new WaitForSeconds(0.5f);
 
         //Dialogo id = 2
         StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
@@ -178,19 +222,16 @@ public class Historia : MonoBehaviour
         while(!bloques.dialogo[numDialogo].finalizado_dialogo){
             yield return null;
         }
-        numDialogo++;
+        
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
+        numDialogo++;
 
+        //Breve pausa
+        yield return new WaitForSeconds(0.5f);
 
-        //
-        //METER ELECCION MULTIPLE
-        //
-        OpcionMultiple.SetActive(true);
-
-        while(OpcionMultiple.activeSelf){
-            yield return null;
-        }
-
+        //duda del minotauro por 1 segundo
+        StartCoroutine(Icons.MostrarIcono(minotauro.gameObject,"duda",1f));
+        yield return new WaitForSeconds(1.5f);
 
         //Dialogo id = 3
         StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
@@ -198,11 +239,28 @@ public class Historia : MonoBehaviour
         while(!bloques.dialogo[numDialogo].finalizado_dialogo){
             yield return null;
         }
-        numDialogo++;
+        
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
+        numDialogo++;
+
+
+        //
+        //METER ELECCION MULTIPLE
+        //
+
+        /*
+
+        OpcionMultiple.SetActive(true);
+
+        while(OpcionMultiple.activeSelf){
+            yield return null;
+        }
+
+        */
 
         //Breve pausa
         yield return new WaitForSeconds(0.5f);
+
 
         //Dialogo id = 4
         StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
@@ -210,9 +268,12 @@ public class Historia : MonoBehaviour
         while(!bloques.dialogo[numDialogo].finalizado_dialogo){
             yield return null;
         }
-        numDialogo++;
-        bloques.dialogo[numDialogo].finalizado_dialogo = false;
 
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+        numDialogo++;
+
+        //Breve pausa
+        yield return new WaitForSeconds(0.5f);
 
         //Dialogo id = 5
         StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
@@ -220,27 +281,13 @@ public class Historia : MonoBehaviour
         while(!bloques.dialogo[numDialogo].finalizado_dialogo){
             yield return null;
         }
-        numDialogo++;
+        
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
+        numDialogo++;
 
+        //Breve pausa
+        yield return new WaitForSeconds(0.5f);
 
-        //Guardar nombre del jugador
-        PlayerPrefs.DeleteAll(); ///////////////////
-        inputField.gameObject.SetActive(true);
-
-        while(!Input.GetKeyDown(KeyCode.Return) || inputField.text.Length == 0){
-            yield return null;
-        }
-
-        nombreJugador = inputField.text;
-        Debug.Log("Enter detectado con nombre: " + inputField.text);
-
-        PlayerPrefs.SetString("nombreJugador", nombreJugador);
-        PlayerPrefs.Save(); // fuerza el guardado
-        inputField.gameObject.SetActive(false);
-
-        ActualizarNombreJSON(bloques);
-        PlayerPrefs.DeleteAll(); //////////////
 
         //Dialogo id = 6
         StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
@@ -248,10 +295,35 @@ public class Historia : MonoBehaviour
         while(!bloques.dialogo[numDialogo].finalizado_dialogo){
             yield return null;
         }
-        numDialogo++;
+        
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
+        numDialogo++;
 
-        TextBox.MoverTextBox();
+        inputField.gameObject.SetActive(true);
+
+        while(!Input.GetKeyDown(KeyCode.Return) || inputField.text.Length == 0){
+            yield return null;
+        }
+
+        nombreJugador = inputField.text;
+
+        inputField.gameObject.SetActive(false);
+
+        yield return null;
+
+        ActualizarNombreJSON(bloques);
+
+        yield return null;
+
+        //Dialogo id = 7
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+        numDialogo++;
 
         //Se empieza a mover de nuevo
         inicio = minotauro.transform.position;
@@ -274,14 +346,15 @@ public class Historia : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
 
 
-        //Dialogo id = 7
+        //Dialogo id = 8
         StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
 
         while(!bloques.dialogo[numDialogo].finalizado_dialogo){
             yield return null;
         }
-        numDialogo++;
+
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
+        numDialogo++;
 
         yield return null;
 
@@ -291,7 +364,7 @@ public class Historia : MonoBehaviour
         //Breve pausa
         yield return new WaitForSeconds(0.2f);
 
-        //Dialogo id = 8
+        //Dialogo id = 9
         StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
 
         while(!bloques.dialogo[numDialogo].finalizado_dialogo){
@@ -328,7 +401,669 @@ public class Historia : MonoBehaviour
 
         Destroy(minotauro.gameObject);
 
-        TextBox.MoverTextBox();
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
+    public void _PrimeraMision(){
+        StartCoroutine(PrimeraMision());
+    }
+
+    public IEnumerator PrimeraMision(){
+        NPC_Minotauro minotauro = GameObject.Find("Minotauro_NPC").GetComponent<NPC_Minotauro>();
+
+        yield return new WaitForSeconds(0.5f);
+
+        BloquesDialogo bloques = CargarDialogo("Primera_Mision");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 1
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 2
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 3
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 4
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 5
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 6
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 7
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        Vector2 inicio = Player.tf.position;
+        Vector2 fin = new Vector2(Player.tf.position.x+0.5f, inicio.y);
+        float distancePerFrame = 3; //0,01f
+        Player.Moverse(inicio,fin,distancePerFrame);
+
+        yield return new WaitForSeconds(0.5f);
+
+        //ACTIVAR EVENTO
+        ActivarEvento("ComprobarPrimeraMision");
+
+        EventTrigger trigger = minotauro.GetComponent<EventTrigger>();
+        trigger.evento.SetPersistentListenerState(0, UnityEngine.Events.UnityEventCallState.Off);
+        trigger.evento.RemoveAllListeners();
+        trigger.evento.AddListener(_ComprobarPrimeraMision);
+
+        DesactivarEvento("PrimeraMision");
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+        InventoryData.DarItem(2, "Prefabs/ObjetosInventario/Hacha");
+    }
+
+    public void _ComprobarPrimeraMision(){
+        int flores = ObtenerFlores();
+        int madera = ObtenerMadera();
+
+        if(flores >= 20 && madera >= 32){
+            StartCoroutine(SegundaMision());
+            DesactivarEvento("ComprobarPrimeraMision");
+        }else{
+            StartCoroutine(PrimeraMisionIncompleta());
+        }
+    }
+
+    int ObtenerFlores(){
+        int totalFlores = 0;
+        for (int i = 0; i < InventoryData.numSlots; i++) {
+            Objeto obj = InventoryData.vSlots[i].objeto;
+            Sprite sprite = obj.GetComponent<Image>() == null ? obj.GetComponent<SpriteRenderer>().sprite : obj.GetComponent<Image>().sprite;
+            if (sprite == Flor1 || sprite == Flor2 || sprite == Flor3) {
+                totalFlores += obj.cantidad;
+            }
+        }
+        Debug.Log("Total flores: " + totalFlores);
+        return totalFlores;
+    }
+
+    int ObtenerMadera(){
+        int totalMadera = 0;
+        for (int i = 0; i < InventoryData.numSlots; i++) {
+            Objeto obj = InventoryData.vSlots[i].objeto;
+            Sprite sprite = obj.GetComponent<Image>() == null ? obj.GetComponent<SpriteRenderer>().sprite : obj.GetComponent<Image>().sprite;
+            if (sprite == Madera) {
+                totalMadera += obj.cantidad;
+            }
+        }
+        Debug.Log("Total madera: " + totalMadera);
+        return totalMadera;
+    }
+
+    public IEnumerator PrimeraMisionIncompleta(){
+        NPC_Minotauro minotauro = GameObject.Find("Minotauro_NPC").GetComponent<NPC_Minotauro>();
+
+        yield return new WaitForSeconds(0.5f);
+
+        BloquesDialogo bloques = CargarDialogo("PrimeraMisionIncompleta");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 1
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        Vector2 inicio = Player.tf.position;
+        Vector2 fin = new Vector2(Player.tf.position.x+0.5f, inicio.y);
+        float distancePerFrame = 3; //0,01f
+        Player.Moverse(inicio,fin,distancePerFrame);
+
+        yield return new WaitForSeconds(0.5f);
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
+    public IEnumerator SegundaMision(){
+        NPC_Minotauro minotauro = GameObject.Find("Minotauro_NPC").GetComponent<NPC_Minotauro>();
+
+        StartCoroutine(Icons.MostrarIcono(minotauro.gameObject,"smile",1f));
+        yield return new WaitForSeconds(1.5f);
+
+
+        BloquesDialogo bloques = CargarDialogo("Segunda_Mision");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        StartCoroutine(Icons.MostrarIcono(minotauro.gameObject,"pensativo",1f));
+        yield return new WaitForSeconds(1.5f);
+
+        //Dialogo id = 1
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 2
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 3
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 4
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 5
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        Vector2 inicio = Player.tf.position;
+        Vector2 fin = new Vector2(Player.tf.position.x+0.5f, inicio.y);
+        float distancePerFrame = 3; //0,01f
+        Player.Moverse(inicio,fin,distancePerFrame);
+
+        yield return new WaitForSeconds(0.5f);
+
+        //ACTIVAR EVENTO
+        ActivarEvento("ComprobarSegundaMision");
+
+        EventTrigger trigger = minotauro.GetComponent<EventTrigger>();
+        trigger.evento.RemoveAllListeners();
+        trigger.evento.AddListener(_ComprobarSegundaMision);
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+        InventoryData.DarItem(3, "Prefabs/ObjetosInventario/Pico");
+    }
+
+    public void _ComprobarSegundaMision(){
+        if(SawSkeletons){
+            StartCoroutine(TerceraMision());
+            DesactivarEvento("ComprobarSegundaMision");
+        }else{
+            StartCoroutine(SegundaMisionIncompleta());
+        }
+    }
+
+    public IEnumerator SegundaMisionIncompleta(){
+        NPC_Minotauro minotauro = GameObject.Find("Minotauro_NPC").GetComponent<NPC_Minotauro>();
+
+        yield return new WaitForSeconds(0.5f);
+
+        BloquesDialogo bloques = CargarDialogo("SegundaMisionIncompleta");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 1
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        Vector2 inicio = Player.tf.position;
+        Vector2 fin = new Vector2(Player.tf.position.x+0.5f, inicio.y);
+        float distancePerFrame = 3; //0,01f
+        Player.Moverse(inicio,fin,distancePerFrame);
+
+        yield return new WaitForSeconds(0.5f);
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
+    public IEnumerator TerceraMision(){
+        NPC_Minotauro minotauro = GameObject.Find("Minotauro_NPC").GetComponent<NPC_Minotauro>();
+
+        yield return new WaitForSeconds(0.5f);
+
+        BloquesDialogo bloques = CargarDialogo("Tercera_Mision");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 1
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 2
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 3
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        StartCoroutine(Icons.MostrarIcono(Player.gameObject,"duda",1f));
+        yield return new WaitForSeconds(1.5f);
+
+        //Dialogo id = 4
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 5
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        Vector2 inicio = Player.tf.position;
+        Vector2 fin = new Vector2(Player.tf.position.x+0.5f, inicio.y);
+        float distancePerFrame = 3; //0,01f
+        Player.Moverse(inicio,fin,distancePerFrame);
+
+        yield return new WaitForSeconds(0.5f);
+
+        //ACTIVAR EVENTO
+        ActivarEvento("ComprobarTerceraMision");
+
+        EventTrigger trigger = minotauro.GetComponent<EventTrigger>();
+        trigger.evento.RemoveAllListeners();
+        trigger.evento.AddListener(_ComprobarTerceraMision);
+
+        //DESACTIVAR EVENTO
+        DesactivarEvento("AvisarMinotauro");
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+        InventoryData.DarItem(4, "Prefabs/ObjetosInventario/Espada");
+    }
+
+    public void _ComprobarTerceraMision(){
+        int piedras = ObtenerPiedras();
+        int huesos = ObtenerHuesos();
+
+        if(piedras >= 32 && huesos >= 1){
+            StartCoroutine(Finalizar());
+            DesactivarEvento("ComprobarTerceraMision");
+        }else{
+            StartCoroutine(TerceraMisionIncompleta());
+        }
+    }
+
+    int ObtenerPiedras(){
+        int totalPiedras = 0;
+        for (int i = 0; i < InventoryData.numSlots; i++) {
+            Objeto obj = InventoryData.vSlots[i].objeto;
+            Sprite sprite = obj.GetComponent<Image>() == null ? obj.GetComponent<SpriteRenderer>().sprite : obj.GetComponent<Image>().sprite;
+            if (sprite == Piedra) {
+                totalPiedras += obj.cantidad;
+            }
+        }
+        Debug.Log("Total piedras: " + totalPiedras);
+        return totalPiedras;
+    }
+
+    int ObtenerHuesos(){
+        int totalHuesos = 0;
+        for (int i = 0; i < InventoryData.numSlots; i++) {
+            Objeto obj = InventoryData.vSlots[i].objeto;
+            Sprite sprite = obj.GetComponent<Image>() == null ? obj.GetComponent<SpriteRenderer>().sprite : obj.GetComponent<Image>().sprite;
+            if (sprite == Hueso) {
+                totalHuesos += obj.cantidad;
+            }
+        }
+        Debug.Log("Total huesos: " + totalHuesos);
+        return totalHuesos;
+    }
+
+    public IEnumerator TerceraMisionIncompleta(){
+        NPC_Minotauro minotauro = GameObject.Find("Minotauro_NPC").GetComponent<NPC_Minotauro>();
+
+        yield return new WaitForSeconds(0.5f);
+
+        BloquesDialogo bloques = CargarDialogo("TerceraMisionIncompleta");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 1
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 2
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        Vector2 inicio = Player.tf.position;
+        Vector2 fin = new Vector2(Player.tf.position.x+0.5f, inicio.y);
+        float distancePerFrame = 3; //0,01f
+        Player.Moverse(inicio,fin,distancePerFrame);
+
+        yield return new WaitForSeconds(0.5f);
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
+    public IEnumerator Finalizar(){
+        yield return null;
+    }
+
+    public void _Esqueletos(){
+        StartCoroutine(Esqueletos());
+    }
+
+    public IEnumerator Esqueletos(){
+        SawSkeletons = true;
+        PlayerCamera.BloquearCamara = true;
+
+        Vector3 inicioC = Camera.main.transform.position;
+        Vector3 nuevaPosicion = new Vector3(inicioC.x, inicioC.y - 10f, inicioC.z);
+        //MOVIMIENTO DE CAMARA
+        yield return StartCoroutine(MoverCamara(inicioC, nuevaPosicion, 2f)); // 2segundos
+
+        //Se para la cámara 2segundos
+        yield return new WaitForSeconds(2f);
+
+        //MOVIMIENTO DE CAMARA A SU POSICION ORIGINAL
+        yield return StartCoroutine(MoverCamara(nuevaPosicion, inicioC, 2f)); // 2segundos
+
+        yield return new WaitForSeconds(0.5f);
+
+        StartCoroutine(Icons.MostrarIcono(Player.gameObject,"duda",1f));
+        yield return new WaitForSeconds(1.5f);
+
+
+        BloquesDialogo bloques = CargarDialogo("AvisarMinotauro");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        //Dialogo id = 1
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        Vector2 inicio = Player.tf.position;
+        Vector2 fin = new Vector2(Player.tf.position.x, inicio.y+0.5f);
+        float distancePerFrame = 3; //0,01f
+        Player.Moverse(inicio,fin,distancePerFrame);
+
+        PlayerCamera.BloquearCamara = false;
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
+    private IEnumerator MoverCamara(Vector3 inicio, Vector3 fin, float duracion){
+        Camera cam = Camera.main;
+        float tiempo = 0f;
+        while (tiempo < duracion){
+            cam.transform.position = Vector3.Lerp(inicio, fin, tiempo / duracion);
+            tiempo += Time.deltaTime;
+            yield return null;
+        }
+        cam.transform.position = fin; // Asegura que termine en la posición final
+    }
+
+    public void _CartelSala1(){
+        StartCoroutine(CartelSala1());
+    }
+
+    private IEnumerator CartelSala1(){
+        BloquesDialogo bloques = CargarDialogo("CartelSala1");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
+    public void _CartelSala3(){
+        StartCoroutine(CartelSala3());
+    }
+
+    private IEnumerator CartelSala3(){
+        BloquesDialogo bloques = CargarDialogo("CartelSala3");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
+    public void _CartelSala4(){
+        StartCoroutine(CartelSala4());
+    }
+
+    private IEnumerator CartelSala4(){
+        BloquesDialogo bloques = CargarDialogo("CartelSala4");
+        ActualizarNombreJSON(bloques);
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
         UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
     }
 }

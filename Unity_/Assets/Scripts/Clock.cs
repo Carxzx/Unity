@@ -7,7 +7,8 @@ public class Clock : MonoBehaviour
     public TMP_Text time;
     Light2D luzGlobal;
 
-    public int hour,minute;
+    [Range(0f, 24f)] public int hour;
+    [Range(0f, 60f)] public int minute;
     float deltaTime;
 
     const float timeSpeed = 0.5f; //Default = 1 para que un minuto en el juego sea un segundo IRL //0.5 creo que esta bien

@@ -121,6 +121,10 @@ public class HotBar : MonoBehaviour
                 prefab = Resources.Load<GameObject>("Prefabs/Herramientas/Pico");
                 Instantiate(prefab);
                 break;
+            case 4: //Espada
+                prefab = Resources.Load<GameObject>("Prefabs/Herramientas/Espada");
+                Instantiate(prefab);
+                break;
         }
     }
 

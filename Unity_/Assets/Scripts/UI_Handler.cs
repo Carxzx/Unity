@@ -38,15 +38,15 @@ public class UI_Handler : MonoBehaviour
 
                 DesactivarHotBar();
             }else{
-                Activar_UI();
-
                 ActivarHotBar();
+
+                Activar_UI();
             }
         }
     }
 
     void Activar_UI(){
-        if(Input.GetMouseButtonDown(0)){
+        if(Input.GetMouseButtonDown(1)){ //Click derecho
             ClickableUI();
         }else{
             NotClickableUI();
@@ -65,18 +65,16 @@ public class UI_Handler : MonoBehaviour
     void ClickableUI(){
         if(Raycast.collider != null && Player.InRange(Raycast.collider.transform.position,Player.InteractuableDistance)){
             if(Raycast.collider.CompareTag("NPC")){
-                ActivarUI(TextBox);
+                Raycast.collider.GetComponent<EventTrigger>().Dialogo();
             }else if(Raycast.collider.CompareTag("Door")){
                 StartCoroutine(Not_ClickableTransicion());
-            }else if(Raycast.collider.CompareTag("Other")){
-                //Por hacer
             }
         }
     }
 
     void NotClickableUI(){
         if(Player.ChangeScenery){
-            StartCoroutine(ClickableTransicion());
+            StartCoroutine(Not_ClickableTransicion());
         }
         if(Input.GetKeyDown(KeyCode.E)){
             ActivarUI(Inventory);
@@ -98,17 +96,50 @@ public class UI_Handler : MonoBehaviour
         objeto.SetActive(false);
     }
 
-    private IEnumerator ClickableTransicion(){
+    private IEnumerator Not_ClickableTransicion(){
         Player.ChangeScenery = false;
 
-        ActivarUI(TransitionCircle);
-        yield return new WaitForSeconds(0.5f); // Espera los primeros 0.5 segundos
-        Door.PlayerTP(TransitionCircle, Player.collisionAux.collider.GetComponent<Door>());
-        yield return new WaitForSeconds(0.5f); // Espera los otros 0.5 segundos
-        OcultarUI(TransitionCircle);
+        Vector2 halfSize = new Vector2(0.25f, 0.25f);
+        Vector2 offset = new Vector2(0f,0.25f);
+
+        Vector2 bottomLeft  = (Vector2)Player.tf.position + offset + new Vector2(-halfSize.x, -halfSize.y);
+        Vector2 bottomRight = (Vector2)Player.tf.position + offset + new Vector2( halfSize.x, -halfSize.y);
+        Vector2 topLeft     = (Vector2)Player.tf.position + offset + new Vector2(-halfSize.x,  halfSize.y);
+        Vector2 topRight    = (Vector2)Player.tf.position + offset + new Vector2( halfSize.x,  halfSize.y);
+
+        float rayLength = 2f; // la distancia que quieras
+        int layerMask = LayerMask.GetMask("OutOfBounds");
+
+        RaycastHit2D[] hits = new RaycastHit2D[8];
+        hits[0] = Physics2D.Raycast(bottomLeft, Vector2.left, rayLength, layerMask);
+        hits[1] = Physics2D.Raycast(bottomLeft, Vector2.down, rayLength, layerMask);
+
+        hits[2] = Physics2D.Raycast(bottomRight, Vector2.right, rayLength, layerMask);
+        hits[3] = Physics2D.Raycast(bottomRight, Vector2.down, rayLength, layerMask);
+
+        hits[4] = Physics2D.Raycast(topLeft, Vector2.left, rayLength, layerMask);
+        hits[5] = Physics2D.Raycast(topLeft, Vector2.up, rayLength, layerMask);
+
+        hits[6] = Physics2D.Raycast(topRight, Vector2.right, rayLength, layerMask);
+        hits[7] = Physics2D.Raycast(topRight, Vector2.up, rayLength, layerMask);
+
+        for (int i = 0; i < hits.Length; i++){
+            if(hits[i].collider != null && hits[i].collider.CompareTag("OutOfBoundsDoor")){
+                Debug.Log(hits[i].collider);
+                ActivarUI(TransitionCircle);
+                yield return new WaitForSeconds(0.5f); // Espera los primeros 0.5 segundos
+                Door.PlayerTP(TransitionCircle, hits[i].collider.GetComponent<Door>());
+                yield return new WaitForSeconds(0.5f); // Espera los otros 0.5 segundos
+                OcultarUI(TransitionCircle);
+
+                break;
+            }
+        }
+
+        yield return null;
     }
 
-    private IEnumerator Not_ClickableTransicion(){
+    private IEnumerator ClickableTransicion(){
         RaycastHit2D AuxRaycast = Raycast;
 
         ActivarUI(TransitionCircle);
@@ -138,6 +169,8 @@ public class UI_Handler : MonoBehaviour
         Icons.SetActive(false);
 
         Player.CanMove = false;
+        Player.walking = false;
+        Player.BloquearMovimiento = true;
     }
 
     public void EventOff(){
@@ -147,6 +180,7 @@ public class UI_Handler : MonoBehaviour
         Clock.SetActive(true);
         Icons.SetActive(true);
         Player.CanMove = true;
+        Player.BloquearMovimiento = false;
     }
 }
 

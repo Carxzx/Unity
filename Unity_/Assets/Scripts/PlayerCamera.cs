@@ -11,6 +11,7 @@ public class PlayerCamera : MonoBehaviour
     int layer1, layer2, layerMask;
 
     public static bool Chocando_abajo;
+    public bool BloquearCamara;
     
     void Start(){
         //La camara comienza en la posicion del jugador
@@ -28,26 +29,28 @@ public class PlayerCamera : MonoBehaviour
     }
 
     void Update(){
-        //Obtenemos los Raycasts
-        ObtenerRaycasts();
+        if(!BloquearCamara){
+            //Obtenemos los Raycasts
+            ObtenerRaycasts();
 
-        //Actualizamos la posicion de la cámara con la del jugador
-        Vector2 auxpos = transform.position;
-        transform.position = new Vector3(Player.tf.position.x, Player.tf.position.y, transform.position.z);
+            //Actualizamos la posicion de la cámara con la del jugador
+            Vector2 auxpos = transform.position;
+            transform.position = new Vector3(Player.tf.position.x, Player.tf.position.y, transform.position.z);
 
-        //Si se choca con alguna pared, la cámara se queda en su sitio para no mostrar la pared
-        if(RaycastPared(R_left) || RaycastPared(R_right)){
-            transform.position = new Vector3(auxpos.x,transform.position.y,transform.position.z);
-        }
-        if(RaycastPared(R_up) || RaycastPared(R_down)){
-            transform.position = new Vector3(transform.position.x,auxpos.y,transform.position.z);
-        }
+            //Si se choca con alguna pared, la cámara se queda en su sitio para no mostrar la pared
+            if(RaycastPared(R_left) || RaycastPared(R_right)){
+                transform.position = new Vector3(auxpos.x,transform.position.y,transform.position.z);
+            }
+            if(RaycastPared(R_up) || RaycastPared(R_down)){
+                transform.position = new Vector3(transform.position.x,auxpos.y,transform.position.z);
+            }
 
-        Chocando_abajo = RaycastPared(R_down);
+            Chocando_abajo = RaycastPared(R_down);
 
-        if(Door.TP){
-            Door.TP = false;
-            RestartCamera();
+            if(Door.TP){
+                Door.TP = false;
+                RestartCamera();
+            }
         }
     }
 

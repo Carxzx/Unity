@@ -43,18 +43,21 @@ public class Icons : MonoBehaviour
     //Activa el globo de texto si el cursor está encima de un NPC y lo muestra en una posición concreta. Desactiva el globo de texto en caso contrario
     void ManejarBalloon(){
         //Controlan la posición del Bocadillo respecto del Objeto
-        const float offsetX = -0.3f;
-        const float offsetY = 1.4f;
+        const float offsetX = 0f;
+        float offsetY;
 
         bool active = Raycast.collider != null && Raycast.collider.CompareTag("NPC") && !UI_Handler.ActiveUI;
         Balloon.SetActive(active);
 
         if(active){
-            //if(minotauro){
-            // posicion = ...
-            //}else if(minero){
-            // posicion = ...
-            //}
+            int id = Raycast.collider.GetComponent<EventTrigger>().id;
+            if(id == 1){ //Minotauro
+                offsetY = 2.8f;
+            }else if(id == 2){ //Cartel grande
+                offsetY = 2.5f;
+            }else{ //Cartel pequeño
+                offsetY = 1.5f;
+            }
             Balloon.transform.position = new Vector2(Raycast.collider.transform.position.x + offsetX, Raycast.collider.transform.position.y + offsetY);
         }
     }

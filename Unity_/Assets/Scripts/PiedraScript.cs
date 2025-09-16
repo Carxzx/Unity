@@ -18,7 +18,7 @@ public class PiedraScript : MonoBehaviour
         GameObject piedra = Resources.Load<GameObject>("Prefabs/ObjetosInventario/Piedra");
         GameObject instancia = Instantiate(piedra, gameObject.transform.position, Quaternion.identity);
 
-        instancia.GetComponent<Objeto>().cantidad = normal ? Random.Range(1, 4) : Random.Range(3, 8);
+        instancia.GetComponent<Objeto>().cantidad = normal ? Random.Range(2, 4) : Random.Range(4, 8);
 
         Vector3Int tilePos = tilemap.WorldToCell(transform.position);
         tilemap.SetTile(tilePos, null);

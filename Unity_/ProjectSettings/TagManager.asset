@@ -23,9 +23,9 @@ TagManager:
   - Interactuable
   - ArbolTrigger
   - PiedraTrigger
-  - 
-  - 
-  - 
+  - Esqueleto
+  - EsqueletoTrigger
+  - Herramienta
   - 
   - 
   - 

@@ -1,0 +1,22 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "Minotauro",
+      "lineas": [
+        "¡{nombre}!",
+        "¿Aún no has recolectado los materiales necesarios?",
+        "¡Vamos, que no tengo todo el día!"
+      ]
+    },
+    {
+      "id": 1,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Recuerda, tienes que recolectar 32 troncos de madera y 20 flores de cualquier tipo.",
+        "Hay un prado al suroeste del bosque donde puedes conseguir una gran cantidad de flores.",
+        "Esperaré aquí mientras tanto."
+      ]
+    }
+  ]
+}

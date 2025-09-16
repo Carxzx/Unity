@@ -34,6 +34,7 @@ ID:
     1 = Objeto cualquiera
     2 = Hacha
     3 = Pico
+    4 = Espada
 
 
 

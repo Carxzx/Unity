@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
     static public bool CanMove;
 
     static public bool ChangeScenery;
-    static public Collision2D collisionAux;
 
     Vector2 direccion;
     public int fotograma;
@@ -25,7 +24,22 @@ public class Player : MonoBehaviour
     public Sprite[] vSpriteIzquierda;
     public Sprite[] vSpriteDerecha;
 
-    public bool walking;
+    static public bool walking;
+
+
+    private bool moverse = false;
+    private Vector3 inicio;
+    private Vector3 fin;
+    private float distancePerFrame;
+    private Vector2 dir;
+
+    public static bool BloquearMovimiento;
+
+    const float intervalo = 0.35f; // 0,35 segundos entre pasos
+    private float timer = 0f;
+    public AudioSource paso;
+
+    public AudioSource sonidoobjeto;
 
     void Awake(){
         tf = transform;
@@ -40,6 +54,7 @@ public class Player : MonoBehaviour
         direccion = Vector2.down;
         CanMove = true;
         ChangeScenery = false;
+        BloquearMovimiento = false;
     }
 
     
@@ -53,14 +68,41 @@ public class Player : MonoBehaviour
             Rb.linearVelocity = Vector2.zero;
         }
 
-        if(PulsandoTecla() && (!PulsandoTeclasContrarias('X') || !PulsandoTeclasContrarias('Y'))){
-            walking = true;
-            anim.SetBool("walking",walking);
-            ManageSprite(direccion,fotograma);
-        }else{
-            walking = false;
-            anim.SetBool("walking",walking);
-            ManageSprite(direccion,0);
+        if(!BloquearMovimiento){
+            if(PulsandoTecla() && (!PulsandoTeclasContrarias('X') || !PulsandoTeclasContrarias('Y'))){
+                walking = true;
+                anim.SetBool("walking",walking);
+                ManageSprite(direccion,fotograma);
+            }else{
+                walking = false;
+                anim.SetBool("walking",walking);
+                ManageSprite(direccion,0);
+            }
+        }
+
+        if(moverse){
+            inicio = transform.position;
+            gameObject.transform.position = Vector2.MoveTowards(inicio, fin, distancePerFrame*Time.deltaTime);
+
+            moverse = transform.position != fin ? true : false;
+            
+            anim.SetBool("walking",moverse);
+            AsignarSprite(dir,fotograma);
+        }
+
+        if (walking)
+        {
+            timer -= Time.deltaTime;       // reduce el temporizador
+            if (timer <= 0f)               // cuando llega a 0, reproducimos
+            {
+                Debug.Log("Reproduciendo sonido de paso");
+                paso.Play();               // o paso.PlayOneShot(paso.clip) si quieres
+                timer = intervalo;         // reinicia el temporizador
+            }
+        }
+        else
+        {
+            timer = 0f; // reinicia el temporizador cuando el jugador para
         }
 
     }
@@ -77,6 +119,21 @@ public class Player : MonoBehaviour
             SR.sprite = vSpriteIzquierda[fot];
         }
         if(direccion == Vector2.right){
+            SR.sprite = vSpriteDerecha[fot];
+        }
+    }
+
+    void AsignarSprite(Vector2 dir, int fot){
+        if (dir == Vector2.up) {
+            SR.sprite = vSpriteEspalda[fot];
+        }
+        if (dir == Vector2.down) {
+            SR.sprite = vSpriteFrente[fot];
+        }
+        if(dir == Vector2.left) {
+            SR.sprite = vSpriteIzquierda[fot];
+        }
+        if(dir == Vector2.right) {
             SR.sprite = vSpriteDerecha[fot];
         }
     }
@@ -176,7 +233,6 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision){
         if(collision.collider.CompareTag("OutOfBoundsDoor")){
-            collisionAux = collision;
             ChangeScenery = true;
         }
     }
@@ -210,8 +266,37 @@ public class Player : MonoBehaviour
                     InventoryData.CopiarObjeto(objInventario,objeto);
                 }
                 Destroy(objeto.gameObject);
+                sonidoobjeto.Play();
                 InventoryData.ObtenerSlots();
             }
         }
+    }
+
+    public void Moverse(Vector3 i, Vector3 f, float d){
+        moverse = true;
+        inicio = i;
+        fin = f;
+        distancePerFrame = d;
+        dir = ComprobarDireccion();
+        direccion = dir;
+    }
+
+    Vector2 ComprobarDireccion(){
+        Vector3 diferencia = fin - inicio;
+
+        if(diferencia.y > 0){ //Movimiento hacia arriba
+            return Vector2.up;
+        }else if(diferencia.y < 0){ //Movimiento hacia debajo
+            return Vector2.down;
+        }else if(diferencia.x > 0){ //Movimiento hacia la derecha
+            return Vector2.right;
+        }else{ //Movimiento hacia la izquierda
+            return Vector2.left;
+        }
+    }
+
+    public void Girarse(Vector2 d){
+        dir = d;
+        AsignarSprite(dir,0);
     }
 }

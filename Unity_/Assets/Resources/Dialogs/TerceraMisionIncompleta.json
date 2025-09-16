@@ -1,0 +1,26 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "Minotauro",
+      "lineas": [
+        "¿Has derrotado ya a esos esqueletos del desierto?"
+      ]
+    },
+    {
+      "id": 1,
+      "personaje": "{nombre}",
+      "lineas": [
+        "Aún no, pero estoy en ello."
+      ]
+    },
+    {
+      "id": 2,
+      "personaje": "Minotauro",
+      "lineas": [
+        "¡Vamos, date prisa, la ceremonia está a punto de comenzar!",
+        "Recuerda, debes de recolectar 32 piedras y algunos huesos de esos esqueletos."
+      ]
+    }
+  ]
+}

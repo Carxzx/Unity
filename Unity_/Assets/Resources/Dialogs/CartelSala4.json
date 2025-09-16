@@ -1,0 +1,11 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "",
+      "lineas": [
+        "Oeste: Prado de flores     Norte: Minas de Enanos\nSur: Desierto"
+      ]
+    }
+  ]
+}

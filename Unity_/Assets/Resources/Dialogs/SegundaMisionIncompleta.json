@@ -1,0 +1,22 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "Minotauro",
+      "lineas": [
+        "¡{nombre}!",
+        "¿Aún no has recolectado la cantidad de piedra que te dije?",
+        "¡Vamos, que no tengo todo el día!"
+      ]
+    },
+    {
+      "id": 1,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Recuerda, tienes que recolectar 32 piedras.",
+        "Las puedes encontrar al sureste del bosque, donde comienza el desierto.",
+        "Esperaré aquí mientras tanto."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "Minotauro",
+      "lineas": [
+        "¡{nombre}!",
+        "Había olvidado que necesito recolectar algunos materiales del bosque, podrías recogerlos por mí?"
+      ]
+    },
+    {
+      "id": 1,
+      "personaje": "{nombre}",
+      "lineas": [
+        "¡Por supuesto, no hay ningún problema! ¿Qué es lo que tengo que hacer?"
+      ]
+    },
+    {
+      "id": 2,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Hoy, a la caída del sol, la Luna de Sangre se alzará en el cielo.",
+        "Nos reuniremos todos alrededor de una gran hoguera en el centro de la aldea para celebrar este evento,",
+        "que solo ocurre una vez cada cinco años.",
+        "Por lo tanto, necesitaremos algunos materiales especiales para la ceremonia."
+      ]
+    },
+    {
+      "id": 3,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Debes conseguir los siguientes materiales: 32 troncos de madera y 20 flores de cualquier tipo."
+      ]
+    },
+    {
+      "id": 4,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Usaremos los troncos para construir la estructura de la hoguera y prender el fuego,",
+        "mientras que las flores, debido a sus propiedades especiales, se utilizarán para modificar el color del fuego a un tono azulado."
+      ]
+    },
+    {
+      "id": 5,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Puedes utilizar este hacha para talar madera. Es un poco endeble,",
+        "ya que es una de las que les damos a los niños minotauro cuando están aprendiendo a talar,",
+        "pero es la única que tenemos que se asemeja a tu tamaño.",
+        "De cualquiera de las maneras, debería servir para talar estos árboles pequeños sin ningún problema."
+      ]
+    },
+    {
+      "id": 6,
+      "personaje": "Minotauro",
+      "lineas": [
+        "En cuanto a las florecillas... puedes simplemente arrancarlas con la mano, si esque no eres un enclenque.",
+        "Los humanos son reconocidos por su escaza fuerza y fortaleza."
+      ]
+    },
+    {
+      "id": 7,
+      "personaje": "Minotauro",
+      "lineas": [
+        "Hay un prado al suroeste del bosque, deberías ser capaz de conseguir una gran cantidad de flores allí.",
+        "Esperaré aquí mientras tanto."
+      ]
+    }
+  ]
+}

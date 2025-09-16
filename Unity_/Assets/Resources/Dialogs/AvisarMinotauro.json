@@ -1,0 +1,18 @@
+{
+  "dialogo": [
+    {
+      "id": 0,
+      "personaje": "{nombre}",
+      "lineas": [
+        "..."
+      ]
+    },
+    {
+      "id": 1,
+      "personaje": "{nombre}",
+      "lineas": [
+        "Esos esqueletos parecen peligrosos, debería de ir a avisar al Minotauro."
+      ]
+    }
+  ]
+}

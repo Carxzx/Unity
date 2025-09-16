@@ -55,6 +55,7 @@ public class InventoryData : MonoBehaviour
     }
 
     public void ObtenerSlots(){
+        Inventory.GetComponent<MenuSonido>().primeravez = true;
         Inventory.SetActive(true);
         for (int i = 0; i < numSlots; i++){
             vSlots[i] = GameObject.Find("Slot" + i).GetComponent<Slot>();
@@ -67,6 +68,7 @@ public class InventoryData : MonoBehaviour
         cantidadObjetoEnMano.text = objetoEnMano.cantidad == 0 ? "" : objetoEnMano.cantidad.ToString();
 
         Inventory.SetActive(false);
+        Inventory.GetComponent<MenuSonido>().primeravez = false;
 
         HotBar HotBar = FindFirstObjectByType<HotBar>();
         HotBar.ActualizarHotBar();
@@ -103,5 +105,45 @@ public class InventoryData : MonoBehaviour
         cantidadMostrada2.text = o2.cantidad == 0 ? "" : o2.cantidad.ToString();
 
         Debug.Log("Intercambio");
+    }
+
+    public Slot PrimerSlotLibre()
+    {
+        for (int i = 0; i < numSlots; i++)
+        {
+            if (vSlots[i].objeto.id == 0)
+            {
+                return vSlots[i];
+            }
+        }
+        return null;
+    }
+
+    public void DarItem(int id, string ruta)
+    {
+        Slot slot = PrimerSlotLibre();
+        if (slot != null)
+        {
+            TMP_Text cantidadMostrada = slot.objeto.gameObject.transform.parent.GetChild(1).GetComponent<TMP_Text>();
+            slot.objeto.id = id; // ID de la hacha = 2
+            slot.objeto.cantidad = 1;
+            cantidadMostrada.text = 1.ToString();
+            //slot.GetComponent<Image>().sprite = Resources.Load<Sprite>(ruta); //Prefabs/ObjetosInventario/Hacha
+            //slot.GetComponent<Image>().enabled = true;
+
+            // Cargar el prefab
+            GameObject prefab = Resources.Load<GameObject>(ruta);
+
+            // Si es un SpriteRenderer (objeto 2D en el mundo)
+            Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
+
+            // Asignar al slot (UI Image)
+            slot.objeto.GetComponent<Image>().sprite = sprite; // o spriteUI
+
+            slot.objeto.GetComponent<Image>().enabled = true;
+
+            HotBar HotBar = FindFirstObjectByType<HotBar>();
+            HotBar.ActualizarHotBar();
+        }
     }
 }

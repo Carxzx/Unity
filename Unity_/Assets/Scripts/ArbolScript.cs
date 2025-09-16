@@ -16,7 +16,7 @@ public class ArbolScript : MonoBehaviour
         GameObject madera = Resources.Load<GameObject>("Prefabs/ObjetosInventario/Madera");
         GameObject instancia = Instantiate(madera, gameObject.transform.position, Quaternion.identity);
 
-        instancia.GetComponent<Objeto>().cantidad = Random.Range(1, 4);
+        instancia.GetComponent<Objeto>().cantidad = Random.Range(2, 4);
 
 
         Vector3Int tilePos = tilemap.WorldToCell(transform.position);

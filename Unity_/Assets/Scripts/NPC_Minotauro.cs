@@ -25,7 +25,7 @@ public class NPC_Minotauro : MonoBehaviour
     void Update(){
         if(walking){
             inicio = transform.position;
-            gameObject.transform.position = Vector2.MoveTowards(inicio, fin, distancePerFrame);
+            gameObject.transform.position = Vector2.MoveTowards(inicio, fin, distancePerFrame*Time.deltaTime);
 
             walking = transform.position != fin ? true : false;
             
