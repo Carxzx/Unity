@@ -42,7 +42,7 @@ public class Esqueleto : MonoBehaviour
     private float radioMax = 7f;
     private float volumenMax = 0.1f;
 
-    const float difMax = 0.01f;
+    const float difMax = 0.1f;
 
     void Start()
     {
