@@ -4,7 +4,7 @@
       "id": 0,
       "personaje": "",
       "lineas": [
-        "Oeste: Prado de flores       Norte: Minas de Enanos\nSur: Desierto"
+        "Oeste: Prado de flores\t\tNorte: Minas de Enanos\nSur: Desierto"
       ]
     }
   ]

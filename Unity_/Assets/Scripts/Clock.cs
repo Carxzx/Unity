@@ -14,7 +14,7 @@ public class Clock : MonoBehaviour
     const float timeSpeed = 0.5f; //Default = 1 para que un minuto en el juego sea un segundo IRL //0.5 creo que esta bien
     const int timeAddedPerCycle = 1;
     const int hoursPerDay = 18;
-    float realTimePerDay;
+    //float realTimePerDay;
 
     const int WakeUp = 8;
     const int GotoSleep = 2;
@@ -29,7 +29,7 @@ public class Clock : MonoBehaviour
         luzGlobal = GameObject.Find("Global Light 2D").GetComponent<Light2D>();
         luzGlobal.color = dia;
 
-        realTimePerDay = hoursPerDay * (timeSpeed / timeAddedPerCycle); //Tiempo real de un día en minutos
+        //realTimePerDay = hoursPerDay * (timeSpeed / timeAddedPerCycle); //Tiempo real de un día en minutos
 
         hour = WakeUp;
         minute = 0;

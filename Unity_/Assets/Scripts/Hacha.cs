@@ -16,40 +16,34 @@ public class Hacha : MonoBehaviour
 
     Player Player;
 
-    public AudioClip sonido;   // arrastras el clip desde el Inspector
+    public AudioClip sonido;
     public AudioSource audio;
 
-    public AudioClip sonidotalar;   // arrastras el clip desde el Inspector
+    public AudioClip sonidotalar;
     public AudioSource audiotalar;
 
     void Start() {
         Player = FindFirstObjectByType<Player>();
         layerMask = LayerMask.GetMask("ArbolTrigger");
 
-
         Vector2 offset = new Vector2(0, 0.8f);
-        float rotacionZ = 0f;
 
         direccion = Player.ObtenerDireccion();
 
         switch (direccion) {
             case Vector2 v when v == Vector2.right:
-                //offset = new Vector2(0.8f, 0.2f);
                 rotacionInicial = 305f;
                 break;
 
             case Vector2 v when v == Vector2.left:
-                //offset = new Vector2(-0.8f, 0.2f);
                 rotacionInicial = 35f;
                 break;
 
             case Vector2 v when v == Vector2.up:
-                //offset = new Vector2(0f, 1f);
                 rotacionInicial = 305f;
                 break;
 
             case Vector2 v when v == Vector2.down:
-                //offset = new Vector2(0f, -1f);
                 rotacionInicial = 215f;
                 break;
         }
@@ -60,7 +54,7 @@ public class Hacha : MonoBehaviour
             transform.localScale = escala;
         }
 
-        // Posición del pico
+        // Posición del hacha
         transform.position = (Vector2)Player.tf.position + offset;
 
         transform.rotation = Quaternion.Euler(0f, 0f, rotacionInicial);
@@ -106,11 +100,10 @@ public class Hacha : MonoBehaviour
     void ComprobarGolpe(){
         ///Obtener la direccion a la que mira el personaje
         Vector2 direccion = Player.ObtenerDireccion();
-        Vector2 posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+0.5f);
 
         HashSet<Collider2D> collidersGolpeados = new HashSet<Collider2D>();
 
-        //Castear un rayo desde el jugador a la direccion que mira
+        Vector2 posicion = new Vector2(Player.transform.position.x, Player.transform.position.y+0.5f);
         RaycastHit2D Raycast1 = Physics2D.Raycast(posicion,direccion,RaycastDistance,layerMask);
 
         if(direccion == Vector2.up || direccion == Vector2.down){

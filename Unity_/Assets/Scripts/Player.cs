@@ -145,13 +145,13 @@ public class Player : MonoBehaviour
     }
 
     public Vector2 ObtenerDireccion(){
-        if(Input.GetKey(KeyCode.W)){ //Movimiento hacia arriba
+        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)){ //Movimiento hacia arriba
             return Vector2.up;
-        }else if(Input.GetKey(KeyCode.S)){ //Movimiento hacia debajo
+        }else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)){ //Movimiento hacia debajo
             return Vector2.down;
-        }else if(Input.GetKey(KeyCode.D)){ //Movimiento hacia la derecha
+        }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){ //Movimiento hacia la derecha
             return Vector2.right;
-        }else if(Input.GetKey(KeyCode.A)){ //Movimiento hacia la izquierda
+        }else if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){ //Movimiento hacia la izquierda
             return Vector2.left;
         }
         return direccion;
@@ -184,12 +184,12 @@ public class Player : MonoBehaviour
     //Devuelve true si se estan pulsando las teclas de direcciones contrarias del Axis especificado
     bool PulsandoTeclasContrarias(char Axis){
         if(Axis == 'X'){
-            if(Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D)){
+            if((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))){
                 return true;
             }
         }
         if(Axis == 'Y'){
-            if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.S)){
+            if((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))){
                 return true;
             }
         }
@@ -199,7 +199,7 @@ public class Player : MonoBehaviour
 
     //Devuelve true si se está pulsando alguna tecla de dirección
     bool PulsandoTecla(){
-        if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)){
+        if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)){
             return true;
         }
         return false;
@@ -209,16 +209,16 @@ public class Player : MonoBehaviour
     //Devuelve true si está caminando en una diagonal
     bool Diagonal(){
         if(!PulsandoTeclasContrarias('X') && !PulsandoTeclasContrarias('Y')){
-            if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A)){
+            if((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))){
                 return true;
             }
-            if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D)){
+            if((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))){
                 return true;
             }
-            if(Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A)){
+            if((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))){
                 return true;
             }
-            if(Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D)){
+            if((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))){
                 return true;
             }
         }

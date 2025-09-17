@@ -37,7 +37,6 @@ public class MenuSonido : MonoBehaviour
         tempAudio.loop = original.loop;
 
         tempAudio.Play();
-        Debug.Log("hola");
 
         // Destruir cuando termine de sonar
         Destroy(tempGO, original.clip.length+0.1f);

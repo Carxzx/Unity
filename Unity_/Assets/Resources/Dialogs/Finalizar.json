@@ -4,7 +4,7 @@
       "id": 0,
       "personaje": "Minotauro",
       "lineas": [
-        "!Felicidades, {nombre}!",
+        "¡Felicidades, {nombre}!",
         "¡Has completado la demo del juego!"
       ]
     },

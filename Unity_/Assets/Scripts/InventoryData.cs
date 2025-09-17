@@ -125,11 +125,9 @@ public class InventoryData : MonoBehaviour
         if (slot != null)
         {
             TMP_Text cantidadMostrada = slot.objeto.gameObject.transform.parent.GetChild(1).GetComponent<TMP_Text>();
-            slot.objeto.id = id; // ID de la hacha = 2
+            slot.objeto.id = id;
             slot.objeto.cantidad = 1;
             cantidadMostrada.text = 1.ToString();
-            //slot.GetComponent<Image>().sprite = Resources.Load<Sprite>(ruta); //Prefabs/ObjetosInventario/Hacha
-            //slot.GetComponent<Image>().enabled = true;
 
             // Cargar el prefab
             GameObject prefab = Resources.Load<GameObject>(ruta);
