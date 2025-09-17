@@ -47,6 +47,8 @@ public class Historia : MonoBehaviour
 
     private bool SawSkeletons = false;
 
+    public Image imagenNegro;
+
     void Start(){
         UI_Handler = FindFirstObjectByType<UI_Handler>();
         TextBox = UI_Handler.TextBox.GetComponent<TextBox>();
@@ -193,6 +195,11 @@ public class Historia : MonoBehaviour
         
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
 
+        EventTrigger trigger = Player.GetComponent<EventTrigger>();
+        trigger.evento.SetPersistentListenerState(0, UnityEngine.Events.UnityEventCallState.Off);
+        trigger.evento.RemoveAllListeners();
+        trigger.evento.AddListener(_Morir);
+
         UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
     }
 
@@ -292,21 +299,6 @@ public class Historia : MonoBehaviour
         
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
         numDialogo++;
-
-
-        //
-        //METER ELECCION MULTIPLE
-        //
-
-        /*
-
-        OpcionMultiple.SetActive(true);
-
-        while(OpcionMultiple.activeSelf){
-            yield return null;
-        }
-
-        */
 
         //Breve pausa
         yield return new WaitForSeconds(0.5f);
@@ -1164,5 +1156,102 @@ public class Historia : MonoBehaviour
         bloques.dialogo[numDialogo].finalizado_dialogo = false;
 
         UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
+    public void _Morir(){
+        StartCoroutine(Morir());
+    }
+
+    private IEnumerator Morir(){
+        yield return StartCoroutine(FadeOut());
+        yield return new WaitForSeconds(0.05f);
+        Player.tf.position = new Vector2(-985.5f,899.5f);
+        Player.Girarse(Vector2.down);
+        yield return new WaitForSeconds(0.05f);
+        yield return StartCoroutine(FadeIn());
+
+        yield return new WaitForSeconds(0.5f);
+
+        StartCoroutine(Icons.MostrarIcono(Player.gameObject,"duda",1f));
+        yield return new WaitForSeconds(1.5f);
+
+        BloquesDialogo bloques = CargarDialogo("Morir");
+        ActualizarNombreJSON(bloques);
+
+        int numDialogo = 0;
+
+        //Dialogo id = 0
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        numDialogo++;
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        //Dialogo id = 1
+        StartCoroutine(MostrarDialogo(bloques.dialogo[numDialogo]));
+
+        while(!bloques.dialogo[numDialogo].finalizado_dialogo){
+            yield return null;
+        }
+        bloques.dialogo[numDialogo].finalizado_dialogo = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        UI_Handler.EventOff(); // Se termina el evento, se quita toda la UI y me puedo mover
+    }
+
+    private IEnumerator FadeOut(){
+        float tiempo = 0f;
+        float duracion = 1f;
+
+        // Guardamos valores iniciales
+        Color colorInicial = imagenNegro.color;
+        float alphaInicial = 0f;   // Transparencia mínima (invisible)
+        float alphaFinal = 1f;     // Transparencia máxima (totalmente negro)
+
+        while (tiempo < duracion){
+            tiempo += Time.deltaTime;
+            float t = tiempo / duracion; // Normalizado (0 → 1)
+
+            // Interpolamos la alpha de la imagen
+            float nuevoAlpha = Mathf.Lerp(alphaInicial, alphaFinal, t);
+            imagenNegro.color = new Color(colorInicial.r, colorInicial.g, colorInicial.b, nuevoAlpha);
+
+            yield return null; // Esperar al siguiente frame
+        }
+
+        // Aseguramos estado final
+        imagenNegro.color = new Color(colorInicial.r, colorInicial.g, colorInicial.b, alphaFinal);
+    }
+
+    private IEnumerator FadeIn(){
+        float tiempo = 0f;
+        float duracion = 1f;
+
+        // Guardamos valores iniciales
+        Color colorInicial = imagenNegro.color;
+        float alphaInicial = 1f;   // Comienza negro (totalmente opaco)
+        float alphaFinal = 0f;     // Termina transparente (invisible)
+
+        // Reiniciamos la alpha y el volumen antes de empezar
+        imagenNegro.color = new Color(colorInicial.r, colorInicial.g, colorInicial.b, alphaInicial);
+
+        while (tiempo < duracion){
+            tiempo += Time.deltaTime;
+            float t = tiempo / duracion; // Normalizado (0 → 1)
+
+            // Interpolamos la alpha de la imagen
+            float nuevoAlpha = Mathf.Lerp(alphaInicial, alphaFinal, t);
+            imagenNegro.color = new Color(colorInicial.r, colorInicial.g, colorInicial.b, nuevoAlpha);
+
+            yield return null; // Esperar al siguiente frame
+        }
+
+        // Aseguramos estado final
+        imagenNegro.color = new Color(colorInicial.r, colorInicial.g, colorInicial.b, alphaFinal);
     }
 }

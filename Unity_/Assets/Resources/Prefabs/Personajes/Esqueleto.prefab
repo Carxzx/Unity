@@ -153,7 +153,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -195,6 +195,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 367c224fc5088914b9053e5c4ff7d950, type: 3}
   - {fileID: 21300000, guid: 54b6138490625894abd2be12ebb92c42, type: 3}
   - {fileID: 21300000, guid: 396b85c13c7ab5b4fb494174aceaf19c, type: 3}
+  walking: 0
   fotograma: 0
   vida: 5
   paso: {fileID: 0}

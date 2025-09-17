@@ -56,7 +56,7 @@ public class Esqueleto : MonoBehaviour
         layerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
         layerHerramienta = LayerMask.NameToLayer("Herramienta");
 
-        layerMask = ~( (1 << layerEsqueleto) | (1 << layerIgnoreRaycast) | (1 << layerTrigger) | (1 << layerHerramienta)); // Ignora ambas layers
+        layerMask = ~( (1 << layerEsqueleto) | (1 << layerIgnoreRaycast) | (1 << layerTrigger) | (1 << layerHerramienta)); // Ignora estas layers
     }
 
     void FixedUpdate()
@@ -89,9 +89,9 @@ public class Esqueleto : MonoBehaviour
         // Esto será el resultado: hacia donde mover al Player
         Vector3 correccion = Vector3.zero;
 
-        bool e1 = esquina1.collider != null; // AI (o equivalente)
-        bool c  = centro.collider  != null;  // C
-        bool e2 = esquina2.collider != null; // AD (o equivalente)
+        bool e1 = esquina1.collider != null;
+        bool c  = centro.collider  != null;
+        bool e2 = esquina2.collider != null;
 
         if(!e1 && !c && !e2) return;
 
@@ -151,7 +151,6 @@ public class Esqueleto : MonoBehaviour
             if(walking){
                 AsignarSprite(direccion,fotograma);
             }
-            //Debug.Log("Corrigiendo movimiento hacia: " + dir);
 
             yield return null;
         }
@@ -205,13 +204,9 @@ public class Esqueleto : MonoBehaviour
         RaycastHit2D hitCenter = Physics2D.Raycast(startCenter, direccion, RaycastDistance, layerMask);
 
         // Debug en build
-        Debug.DrawRay(start1, direccion * RaycastDistance, Color.red, 1f);
-        Debug.DrawRay(start2, direccion * RaycastDistance, Color.red, 1f);
-        Debug.DrawRay(startCenter, direccion * RaycastDistance, Color.red, 1f);
-
-        //Debug.Log("Raycast " + direccion + " desde " + start1 + " golpea: " + (hit1.collider ? hit1.collider.gameObject.name : "null"));
-        //Debug.Log("Raycast " + direccion + " desde " + start2 + " golpea: " + (hit2.collider ? hit2.collider.gameObject.name : "null"));
-        //Debug.Log("Raycast " + direccion + " desde " + startCenter + " golpea: " + (hitCenter.collider ? hitCenter.collider.gameObject.name : "null"));
+        //Debug.DrawRay(start1, direccion * RaycastDistance, Color.red, 1f);
+        //Debug.DrawRay(start2, direccion * RaycastDistance, Color.red, 1f);
+        //Debug.DrawRay(startCenter, direccion * RaycastDistance, Color.red, 1f);
 
         return new RaycastHit2D[] { hit1, hitCenter, hit2 };
     }

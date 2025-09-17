@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour
 {
@@ -41,6 +42,13 @@ public class Player : MonoBehaviour
     public AudioSource paso;
 
     public AudioSource sonidoobjeto;
+
+    public static int golpes = 0;
+    public static bool invencible = false;
+
+    public AudioSource daño;
+
+    List<Collider2D> enemigosDentro = new List<Collider2D>();
 
     void Awake(){
         tf = transform;
@@ -97,20 +105,19 @@ public class Player : MonoBehaviour
             AsignarSprite(dir,fotograma);
         }
 
-        if (walking || moverse)
-        {
+        if (walking || moverse){
             timer -= Time.deltaTime;       // reduce el temporizador
-            if (timer <= 0f)               // cuando llega a 0, reproducimos
-            {
+            if (timer <= 0f){              // cuando llega a 0, reproducimos
                 paso.Play();               // o paso.PlayOneShot(paso.clip) si quieres
                 timer = intervalo;         // reinicia el temporizador
             }
-        }
-        else
-        {
+        }else{
             timer = 0f; // reinicia el temporizador cuando el jugador para
         }
 
+        if(enemigosDentro.Count > 0 && !invencible){
+            StartCoroutine(Invencibilidad());
+        }
     }
 
     void ManageSprite(Vector2 dir, int fot){
@@ -244,6 +251,9 @@ public class Player : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D collision){
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Esqueleto")){
+            enemigosDentro.Add(collision);
+        }
         if(collision.GetComponent<Collider2D>().CompareTag("Objeto")){
             InventoryData InventoryData = FindFirstObjectByType<InventoryData>();
             if(!InventoryData.InventoryFull()){
@@ -278,6 +288,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    void OnTriggerStay2D(Collider2D collision){
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Esqueleto") && !invencible){
+            StartCoroutine(Invencibilidad());
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision){
+        enemigosDentro.Remove(collision);
+    }
+
     public void Moverse(Vector3 i, Vector3 f, float d){
         moverse = true;
         inicio = i;
@@ -304,5 +324,31 @@ public class Player : MonoBehaviour
     public void Girarse(Vector2 d){
         dir = d;
         AsignarSprite(dir,0);
+    }
+
+
+    private IEnumerator Invencibilidad() {
+        float tiempo = 0f;
+        float duracionInvencibilidad = 3f;
+        float intervaloParpadeo = 0.2f;
+
+        golpes++;
+        invencible = true;
+        daño.Play();
+
+        if(golpes == 3){
+            golpes = 0;
+            GetComponent<EventTrigger>().Dialogo();
+        }
+
+        while (tiempo < duracionInvencibilidad) {
+            SR.enabled = !SR.enabled; // alterna visibilidad
+            yield return new WaitForSeconds(intervaloParpadeo);
+            tiempo += intervaloParpadeo;
+        }
+
+        SR.enabled = true; // aseguramos que quede visible al final
+        invencible = false;
+
     }
 }
